@@ -1,6 +1,7 @@
 export const FORMS_ERROR_LOGIN = 'Email/Contraseña incorrectos';
 export const FORMS_ERROR_LOCKED = 'Usuario bloqueado.';
 export const FORMS_ERROR_RECOVERY_PASSWORD_NOT_EMAIL = 'El email introducido no está registrado';
+export const FORMS_ERROR_RECOVERY_PASSWORD_NOT_TOKEN = 'El codigo introducido no es correecto. Compruebe su email.';
 export const FORMS_ERROR_ALL_REQUIRED = 'Rellene todos los campos';
 
 export const FORM_ADD = 'Añadir';

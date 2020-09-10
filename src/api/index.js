@@ -18,7 +18,34 @@ const API = {
                 configAxios.defaults.headers.Authorization = `Bearer ${token}`
             }
 
-            return await axios.get(`${BASE_URL}/init`);
+            return await configAxios.get(`${BASE_URL}/init`);
+        },
+        async login(email, password) {
+            let body = {
+                'email': email,
+                'password': password
+            };
+
+            return await configAxios.post(`/login_check`, body);
+        },
+        async refresh(refreshToken) {
+            let body = {'refresh_token': refreshToken};
+
+            return await configAxios.post(`/token/refresh`, body);
+        },
+        async recoveryPassword(email) {
+            let body = {'email': email};
+
+            return await configAxios.post(`/recovery-password`, body);
+        },
+        async changePasswordFromRecovery(code, password) {
+            let body = {
+                'confirmationToken': code,
+                'plainPassword': password
+            };
+
+            return await configAxios.put(`/recovery-password`, body);
         }
     }
 }
+export default API;
