@@ -2,9 +2,9 @@ import React from 'react';
 import LayoutAuth from "../src/components/layout/LayoutAuth";
 import Login from "../src/components/Login";
 import {NextSeo} from 'next-seo';
+import WrapperSecurity from "../src/components/WrapperSecurity";
 
 function LoginPage() {
-
     return (
         <LayoutAuth>
             <NextSeo
@@ -16,9 +16,4 @@ function LoginPage() {
     )
 }
 
-export async function getStaticProps() {
-
-    return { props: {} }
-}
-
-export default LoginPage
+export default WrapperSecurity(LoginPage)

@@ -5,6 +5,10 @@ export async function getCookies(ctx) {
     return parseCookies(ctx);
 }
 
+export async function getServerCookie(req) {
+    return parseCookies({req});
+}
+
 export function updateCookie(name, value, ctx = null) {
     setCookie(ctx, name, value, {
         maxAge: COOKIE_MAX_AGE,

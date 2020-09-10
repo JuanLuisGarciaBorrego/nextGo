@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useContext, useState} from 'react';
 import {Formik, Form, Field} from 'formik';
 import Router from 'next/router';
 import API from "../api";
@@ -11,8 +11,10 @@ import Link from "next/link";
 import Logo from "./Logo";
 import InputPassword from "./Form/InputPassword";
 import SERVER_API from "../api/server";
+import {AuthContext} from "../context/AuthContext";
 
 function Login() {
+    const {setLogin} = useContext(AuthContext);
 
     const initialValues = {
         email: '',
@@ -20,15 +22,12 @@ function Login() {
     };
 
     const handleSubmit = async (values, {setSubmitting, setErrors}) => {
-        return new Promise(async() => {
+        return new Promise(async () => {
             setSubmitting(true);
 
             try {
                 const loginResponse = await SERVER_API.security.login(values.email, values.password);
-                const data = await loginResponse.data;
-                console.log(data);
-                // updateCookie(COOKIE_AUTH, data.token);
-                // updateCookie(COOKIE_REFRESH_AUTH, data.refresh_token);
+                setLogin(loginResponse.data);
 
             } catch (e) {
                 setErrors({
@@ -40,7 +39,7 @@ function Login() {
             }
 
             await setSubmitting(false);
-            // return Router.push(ROUTE_LOGIN_REDIRECT_SUCCESS);
+            return Router.push(ROUTE_LOGIN_REDIRECT_SUCCESS);
         });
     }
 
@@ -49,7 +48,7 @@ function Login() {
             <div>
                 <div className="text-center">
                     <span className="inline-block relative">
-                        <Logo />
+                        <Logo/>
                     </span>
                 </div>
                 <h2 className="mt-2 mb-2 text-center text-2xl leading-6 font-extrabold text-gray-900">
@@ -112,10 +111,14 @@ function Login() {
                                     <p className="text-xs font font-italic text-red-500 ">{errors.errorForm}</p>
                                 </div>
 
-                                <button type="submit" disabled={isSubmitting && true} className={`${isSubmitting && 'opacity-50 cursor-not-allowed spinner'} mt-2 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-800 hover:bg-indigo-600 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out`}>
+                                <button type="submit" disabled={isSubmitting && true}
+                                        className={`${isSubmitting && 'opacity-50 cursor-not-allowed spinner'} mt-2 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-800 hover:bg-indigo-600 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out`}>
                                      <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                          <svg className="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                          <svg className="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                               viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd"
+                                                  d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                  clipRule="evenodd"/>
                                         </svg>
                                     </span>
                                     Entrar

@@ -2,7 +2,7 @@ import React from 'react';
 import LayoutAuth from "../src/components/layout/LayoutAuth";
 import {NextSeo} from 'next-seo';
 import RecoveryPassword from "../src/components/RecoveryPassword";
-import Enter from "./entrar";
+import WrapperSecurity from "../src/components/WrapperSecurity";
 
 function RecoveryPasswordPage() {
 
@@ -16,9 +16,4 @@ function RecoveryPasswordPage() {
     )
 }
 
-export async function getStaticProps() {
-
-    return { props: {} }
-}
-
-export default RecoveryPasswordPage
+export default WrapperSecurity(RecoveryPasswordPage)

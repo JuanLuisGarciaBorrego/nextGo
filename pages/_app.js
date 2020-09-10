@@ -10,7 +10,7 @@ function MyApp({Component, pageProps}) {
   return (
       <AuthContextProvider {...pageProps}>
         <DefaultSeo {...SEO} />
-          <Component {...pageProps} />
+        <Component {...pageProps} />
       </AuthContextProvider>
   )
 }
