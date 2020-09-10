@@ -14,15 +14,9 @@ import SERVER_API from "../api/server";
 
 function Login() {
 
-    const [showPassword, setShowPassword] = useState(false);
-
     const initialValues = {
         email: '',
         password: ''
-    };
-
-    const handleShowPassword = () => {
-        setShowPassword(!showPassword);
     };
 
     const handleSubmit = async (values, {setSubmitting, setErrors}) => {

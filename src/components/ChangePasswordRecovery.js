@@ -1,7 +1,7 @@
 import React, {Fragment, useContext} from 'react';
 import {Formik, Form, Field} from 'formik';
 import API from "../api";
-import {FORMS_ERROR_RECOVERY_PASSWORD_NOT_EMAIL, FORMS_ERROR_RECOVERY_PASSWORD_NOT_TOKEN} from "../constants/forms";
+import {FORMS_ERROR_RECOVERY_PASSWORD_NOT_TOKEN} from "../constants/forms";
 import Link from "next/link";
 import {updateCookie} from "../utils";
 import {COOKIE_AUTH, COOKIE_REFRESH_AUTH} from "../constants/cookies";
