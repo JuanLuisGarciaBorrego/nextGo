@@ -9,17 +9,10 @@ export default function Nav() {
                 <a>Home</a>
             </Link>{' - '}
 
-            <Link href="/hola">
-                <a>Hola</a>
-            </Link>{'-'}
 
             <Link href="/panel">
                 <a>Panel</a>
             </Link>{'-'}
-
-            <Link href="/panel/hola">
-                <a>Panel hola</a>
-            </Link>
             <hr/>
         </header>
     );

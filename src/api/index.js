@@ -1,5 +1,6 @@
 import axios from "axios";
-import {generateQueryStringFromObject, isServerRequest, redirectBrowser} from "../utils";
+import {isServerRequest} from "../utils";
+import {ROUTE_LOGIN} from "../constants/routes";
 
 const BASE_URL = isServerRequest ? process.env.API_BASE_URL : process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -11,14 +12,22 @@ const configAxios = axios.create({
     }
 });
 
+const configSecurityAxios = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+});
+
 const API = {
     security: {
         async init(token = null) {
             if (token) {
-                configAxios.defaults.headers.Authorization = `Bearer ${token}`
+                configSecurityAxios.defaults.headers.Authorization = `Bearer ${token}`
             }
 
-            return await configAxios.get(`${BASE_URL}/init`);
+            return await configSecurityAxios.get(`/init`);
         },
         async login(email, password) {
             let body = {
@@ -26,17 +35,17 @@ const API = {
                 'password': password
             };
 
-            return await configAxios.post(`/login_check`, body);
+            return await configSecurityAxios.post(`/login_check`, body);
         },
         async refresh(refreshToken) {
             let body = {'refresh_token': refreshToken};
 
-            return await configAxios.post(`/token/refresh`, body);
+            return await configSecurityAxios.post(`/token/refresh`, body);
         },
         async recoveryPassword(email) {
             let body = {'email': email};
 
-            return await configAxios.post(`/recovery-password`, body);
+            return await configSecurityAxios.post(`/recovery-password`, body);
         },
         async changePasswordFromRecovery(code, password) {
             let body = {
@@ -44,8 +53,25 @@ const API = {
                 'plainPassword': password
             };
 
-            return await configAxios.put(`/recovery-password`, body);
+            return await configSecurityAxios.put(`/recovery-password`, body);
         }
+    },
+    user: {
+        async currentUser(token) {
+            configAxios.defaults.headers.Authorization = `Bearer ${token}`
+
+            return await configAxios.get(`/userAuthenticated`);
+        },
     }
 }
 export default API;
+
+configAxios.interceptors.response.use(function (config) {
+    return config;
+}, function (error) {
+    if (error.response.status === 401) {
+        return window.location.replace(ROUTE_LOGIN);
+    }
+    return Promise.reject(error);
+});
+

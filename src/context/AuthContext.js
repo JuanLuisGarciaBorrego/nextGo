@@ -48,9 +48,8 @@ const AuthContextProvider = ({children}) => {
 
                 return;
             } catch (e) {
-                console.log(e)
-                if(e.response?.status === 401) {
-                    try{
+                if (e.response?.status === 401) {
+                    try {
                         const responseRefreshTokenApi = await API.security.refresh(response.data.cookies.refresh);
 
                         const responseInitApiRefresh = await API.security.init(responseRefreshTokenApi.data.token);
@@ -62,20 +61,21 @@ const AuthContextProvider = ({children}) => {
                         setLoading(false);
                         setRole(whatRoleAmI(responseInitApiRefresh.data.data.user.roles));
                         setUser(responseInitApiRefresh.data.data.user);
+
+                        await SERVER_API.security.refresh(responseRefreshTokenApi.data.token, responseRefreshTokenApi.data.refresh_token);
+
                         return;
-                    }catch (e) {
+                    } catch (e) {
                         setAuthenticated(false)
                         setLoading(false);
                         return;
                     }
-                }else{
+                } else {
                     setAuthenticated(false)
                     setLoading(false);
                     return;
                 }
             }
-
-            console.log('no debe salir')
         };
 
         initializedAuth();

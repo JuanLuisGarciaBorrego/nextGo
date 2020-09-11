@@ -26,6 +26,14 @@ const SERVER_API = {
         async logout() {
             return await configAxios.get(`/logout`);
         },
+        async refresh(newToken, newRefreshToken) {
+            let body = {
+                'token': newToken,
+                'refresh_token': newRefreshToken
+            };
+
+            return await configAxios.post(`/refresh`, body);
+        },
     }
 };
 
