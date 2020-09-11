@@ -1,28 +1,18 @@
-import Head from 'next/head'
-import WrapperSecurity from "../../src/components/WrapperSecurity";
-import Link from "next/link";
 import React from "react";
+import {useAuthenticated} from "../../src/context/AuthContext";
+import Nav from "../../src/components/Nav";
+import withAuth from "../../src/utils/wrapper/withAuth";
 
-function HomePage() {
+function PanelPage() {
 
-    console.log('panel vista')
-  return (
-    <div>
-      <Head>
-        <title>Panel</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-       Panel
-
-        <Link href="/">
-            <a>public inicio</a>
-        </Link>
-
-        <Link href="/panel/hola">
-            <a>private hola</a>
-        </Link>
-    </div>
-  )
+    const {isAuthenticated} = useAuthenticated();
+    console.log('Hola estoy en panel authenticated?', isAuthenticated)
+    return (
+        <div>
+            <Nav/>
+            Panel
+        </div>
+    )
 }
-export default WrapperSecurity(HomePage)
+
+export default withAuth(PanelPage);

@@ -2,7 +2,7 @@ import React from 'react';
 import LayoutAuth from "../src/components/layout/LayoutAuth";
 import {NextSeo} from 'next-seo';
 import RecoveryPassword from "../src/components/RecoveryPassword";
-import WrapperSecurity from "../src/components/WrapperSecurity";
+import withoutAuth from "../src/utils/wrapper/withoutAuth";
 
 function RecoveryPasswordPage() {
 
@@ -16,4 +16,4 @@ function RecoveryPasswordPage() {
     )
 }
 
-export default WrapperSecurity(RecoveryPasswordPage)
+export default withoutAuth(RecoveryPasswordPage)

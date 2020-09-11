@@ -1,9 +1,6 @@
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment} from 'react';
 import {Formik, Form, Field} from 'formik';
-import Router from 'next/router';
-import API from "../api";
-import {updateCookie} from "../utils";
-import {COOKIE_AUTH, COOKIE_REFRESH_AUTH} from "../constants/cookies";
+import {useRouter} from 'next/router';
 import {ROUTE_LOGIN_REDIRECT_SUCCESS} from "../constants/routes";
 import {FORMS_ERROR_LOGIN} from "../constants/forms";
 import {APP_NAME} from "../constants/app";
@@ -11,10 +8,11 @@ import Link from "next/link";
 import Logo from "./Logo";
 import InputPassword from "./Form/InputPassword";
 import SERVER_API from "../api/server";
-import {AuthContext} from "../context/AuthContext";
+import {useAuthenticated} from "../context/AuthContext";
 
 function Login() {
-    const {setLogin} = useContext(AuthContext);
+    const {setLogin} = useAuthenticated();
+    const router = useRouter();
 
     const initialValues = {
         email: '',
@@ -39,7 +37,7 @@ function Login() {
             }
 
             await setSubmitting(false);
-            return Router.push(ROUTE_LOGIN_REDIRECT_SUCCESS);
+            return router.push(ROUTE_LOGIN_REDIRECT_SUCCESS);
         });
     }
 

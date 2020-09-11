@@ -1,21 +1,15 @@
-import Head from 'next/head'
-import Link from "next/link";
-import React from "react";
+import React from 'react';
+import {useAuthenticated} from "../src/context/AuthContext";
+import Nav from "../src/components/Nav";
 
-export default function HomePage() {
-  return (
-    <div>
-      <Head>
-        <title>NextGo</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-        <Link href="/">
-            <a>inicio</a>
-        </Link>----------
-        <Link href="/panel">
-            <a>panel</a>
-        </Link>
-        <div className="h-screen bg-gradient-to-r from-orange-400 via-red-500 to-pink-500"> </div>
-    </div>
-  )
+export default function HelloPage() {
+
+    const {isAuthenticated} = useAuthenticated();
+    console.log('Hola estoy en hola public authenticated?', isAuthenticated)
+    return (
+        <div>
+            <Nav/>
+            Hola public
+        </div>
+    )
 }

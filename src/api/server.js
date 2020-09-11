@@ -12,8 +12,8 @@ const configAxios = axios.create({
 
 const SERVER_API = {
     security: {
-        async init() {
-            return await configAxios.get(`/init`);
+        async checkAuth() {
+            return await configAxios.get(`/checkAuth`);
         },
         async login(email, password) {
             let body = {

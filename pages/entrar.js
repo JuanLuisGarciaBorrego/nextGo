@@ -2,7 +2,7 @@ import React from 'react';
 import LayoutAuth from "../src/components/layout/LayoutAuth";
 import Login from "../src/components/Login";
 import {NextSeo} from 'next-seo';
-import WrapperSecurity from "../src/components/WrapperSecurity";
+import withoutAuth from "../src/utils/wrapper/withoutAuth";
 
 function LoginPage() {
     return (
@@ -16,4 +16,4 @@ function LoginPage() {
     )
 }
 
-export default WrapperSecurity(LoginPage)
+export default withoutAuth(LoginPage);

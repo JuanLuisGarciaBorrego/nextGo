@@ -1,125 +1,129 @@
-import React, {useState, useEffect, createContext} from 'react';
+import React, {useState, useEffect, createContext, useContext} from 'react';
 import SERVER_API from "../api/server";
 import {useRouter} from 'next/router'
-import {checkAccessControl, whatRoleAmI} from "../utils";
+import {whatRoleAmI} from "../utils";
 import API from "../api";
-import {ROUTE_LOGIN, ROUTE_LOGIN_REDIRECT_SUCCESS} from "../constants/routes";
+import {ROUTE_LOGIN} from "../constants/routes";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext({
+    isAuthenticated: false,
+    setAuthenticated: () => {
+    },
+    user: null,
+    role: null
+});
 
 const AuthContextProvider = ({children}) => {
-    const router = useRouter()
+    const [token, setToken] = useState(null);
+    const [refreshToken, setRefreshToken] = useState(null);
 
-    const [token, setToken] = useState(null)
-    const [refreshToken, setRefreshToken] = useState(null)
-    const [isLogged, setIsLogged] = useState(false)
+    const [isAuthenticated, setAuthenticated] = useState(false);
+    const [isLoading, setLoading] = React.useState(true);
+
     const [role, setRole] = useState(null);
     const [user, setUser] = useState(null);
 
+    const router = useRouter();
+
     useEffect(() => {
-        async function loadUserFromCookies() {
-            let loadToken = null;
-            let loadRefreshToken = null;
-            let loadIsLogged = false;
-            let loadRole = null;
-            let loadUser = null;
+        const initializedAuth = async () => {
+            const response = await SERVER_API.security.checkAuth();
 
-            const response = await SERVER_API.security.init();
-            const accessControl = checkAccessControl(router);
+            if (!response.data.hasCookies) {
+                setAuthenticated(false)
+                setLoading(false);
+                return;
+            }
 
-            let jsonInitApi = null;
+            try {
+                const responseApi = await API.security.init(response.data.cookies.auth)
 
-            if (response.data.hasCookies) {
-                try {
-                    const responseInitApi = await API.security.init(response.data.cookies.auth)
-                    jsonInitApi = await responseInitApi.data.data;
+                setToken(response.data.cookies.auth);
+                setRefreshToken(response.data.cookies.refresh);
 
-                    loadToken = response.data.cookies.auth;
-                    loadRefreshToken = response.data.cookies.refresh;
-                    loadIsLogged = jsonInitApi.isLogged;
-                    loadRole = whatRoleAmI(jsonInitApi.user.roles);
-                    loadUser = jsonInitApi.user;
-                } catch (e) {
-                    if (e.response.status === 401 && response.data.cookies.refresh) {
-                        try {
-                            const responseRefreshToken = await API.security.refresh(response.data.cookies.refresh)
-                            const jsonRefreshApi = await responseRefreshToken.data;
+                setAuthenticated(responseApi.data.data.isAuthenticated);
+                setLoading(false);
+                setRole(whatRoleAmI(responseApi.data.data.user.roles));
+                setUser(responseApi.data.data.user);
 
-                            const responseInitApiRefresh = await API.security.init(jsonRefreshApi.token);
-                            const jsonInitApiRefresh = await responseInitApiRefresh.data.data;
+                return;
+            } catch (e) {
+                console.log(e)
+                if(e.response?.status === 401) {
+                    try{
+                        const responseRefreshTokenApi = await API.security.refresh(response.data.cookies.refresh);
 
-                            loadToken = jsonRefreshApi.token;
-                            loadRefreshToken = jsonRefreshApi.refresh_token;
-                            loadIsLogged = jsonInitApiRefresh.isLogged;
-                            loadRole = whatRoleAmI(jsonInitApiRefresh.user.roles);
-                            loadUser = jsonInitApiRefresh.user;
+                        const responseInitApiRefresh = await API.security.init(responseRefreshTokenApi.data.token);
 
-                        } catch (e) {
-                            if (router.pathname !== ROUTE_LOGIN) {
-                                return router.push(ROUTE_LOGIN);
-                            }
-                        }
+                        setToken(responseRefreshTokenApi.data.token);
+                        setRefreshToken(responseRefreshTokenApi.data.refresh_token);
+
+                        setAuthenticated(responseInitApiRefresh.data.data.isAuthenticated);
+                        setLoading(false);
+                        setRole(whatRoleAmI(responseInitApiRefresh.data.data.user.roles));
+                        setUser(responseInitApiRefresh.data.data.user);
+                        return;
+                    }catch (e) {
+                        setAuthenticated(false)
+                        setLoading(false);
+                        return;
                     }
+                }else{
+                    setAuthenticated(false)
+                    setLoading(false);
+                    return;
                 }
             }
 
-            if (accessControl) {
-                if (accessControl.type === 'public_logged_in' && loadIsLogged) {
-                    return router.push(ROUTE_LOGIN_REDIRECT_SUCCESS);
-                }
+            console.log('no debe salir')
+        };
 
-                if (accessControl.type === 'private' && loadIsLogged === false) {
-                    return router.push(ROUTE_LOGIN);
-                }
-            }
-
-            await setToken(loadToken);
-            await setRefreshToken(loadRefreshToken);
-            await setIsLogged(loadIsLogged);
-            await setRole(loadRole);
-            await setUser(loadUser);
-            console.log('use effect security principal');
-        }
-
-        loadUserFromCookies();
-
+        initializedAuth();
     }, []);
-
 
     async function handleLogout() {
         await SERVER_API.security.logout();
 
-        await setToken(null);
-        await setRefreshToken(null);
-        await setIsLogged(false);
-        await setRole(null);
-        await setUser(null);
+        setToken(null);
+        setRefreshToken(null);
+
+        setAuthenticated(false);
+        setLoading(false);
+        setRole(null);
+        setUser(null);
 
         return router.push(ROUTE_LOGIN);
     }
 
     async function setLogin(data) {
-        await setToken(data.token);
-        await setRefreshToken(data.refresh_token);
-        await setIsLogged(true);
-        await setRole(whatRoleAmI(data.roles));
-        await setUser(data.user);
+        await setToken(data.data.token);
+        await setRefreshToken(data.data.refresh_token);
+
+        await setAuthenticated(true);
+        await setRole(whatRoleAmI(data.data.user.roles));
+        await setUser(data.data.user);
     }
 
     return (
         <AuthContext.Provider value={{
-            handleLogout,
+            isLoading,
+            isAuthenticated,
+            setAuthenticated,
             token,
             refreshToken,
-            isLogged,
             role,
             user,
-            setLogin
+            handleLogout,
+            setLogin,
         }}>
             {children}
         </AuthContext.Provider>
     )
 };
 export default AuthContextProvider;
+
+export function useAuthenticated() {
+    return useContext(AuthContext);
+}
 
 

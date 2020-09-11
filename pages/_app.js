@@ -8,7 +8,7 @@ import AuthContextProvider from './../src/context/AuthContext';
 
 function MyApp({Component, pageProps}) {
   return (
-      <AuthContextProvider {...pageProps}>
+      <AuthContextProvider>
         <DefaultSeo {...SEO} />
         <Component {...pageProps} />
       </AuthContextProvider>
