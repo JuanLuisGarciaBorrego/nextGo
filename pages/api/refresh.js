@@ -11,7 +11,7 @@ export default async (req, res) => {
         const {token, refresh_token} = req.body;
 
         const cookieSerialized = cookie.serialize(COOKIE_AUTH, token, {
-            sameSite: true,
+            sameSite: 'strict',
             secure: process.env.NODE_ENV === 'production',
             maxAge: COOKIE_MAX_AGE,
             httpOnly: true,
@@ -19,7 +19,7 @@ export default async (req, res) => {
         });
 
         const cookieRefreshSerialized = cookie.serialize(COOKIE_REFRESH_AUTH, refresh_token, {
-            sameSite: true,
+            sameSite: 'strict',
             secure: process.env.NODE_ENV === 'production',
             maxAge: COOKIE_MAX_AGE,
             httpOnly: true,
