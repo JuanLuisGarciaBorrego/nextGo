@@ -11,8 +11,9 @@ function LayoutBase({children}) {
         <Fragment>
             <div className="h-screen flex overflow-hidden bg-white">
                 <div className="lg:hidden">
-                    <div className="fixed inset-0 flex z-10">
-                        <Transition
+                    <Transition show={isOpenOffCanvas}>
+                    <div className="fixed inset-0 flex z-10  ">
+                        <Transition.Child
                             show={isOpenOffCanvas}
                             enter="transition-opacity ease-linear duration-300"
                             enterFrom="opacity-0"
@@ -23,8 +24,8 @@ function LayoutBase({children}) {
                             className="fixed inset-0"
                         >
                             <div className="absolute inset-0 bg-gray-600 opacity-75" onClick={() => setIsOpenOffCanvas(false)}> </div>
-                        </Transition>
-                        <Transition
+                        </Transition.Child>
+                        <Transition.Child
                             show={isOpenOffCanvas}
                             enter="transition ease-in-out duration-300 transform"
                             enterFrom="-translate-x-full"
@@ -87,11 +88,12 @@ function LayoutBase({children}) {
                                     </div>
                                 </nav>
                             </div>
-                        </Transition>
+                        </Transition.Child>
                         <div className="flex-shrink-0 w-14">
                             {/*Dummy element to force sidebar to shrink to fit close icon */}
                         </div>
                     </div>
+                    </Transition>
                 </div>
                 {/*Static sidebar for desktop */}
                 <div className="hidden lg:flex lg:flex-shrink-0">
@@ -200,7 +202,7 @@ function LayoutBase({children}) {
                             </div>
                         </div>
                     </div>
-                    <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none" tabIndex="0">
+                    <main className="flex-1 relative overflow-y-auto focus:outline-none" tabIndex="0">
                         {children}
                     </main>
                 </div>
