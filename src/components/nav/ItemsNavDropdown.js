@@ -7,8 +7,8 @@ export default function ItemsNavDropdown() {
     return (
         <Fragment>
             <div className="py-1">
-                <Link href="/panel/perfil">
-                    <a href="/panel/perfil" className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">View profile</a>
+                <Link href="/panel/cuenta/perfil">
+                    <a href="/panel/cuenta/perfil" className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">Perfil</a>
                 </Link>
             </div>
             <div className="border-t border-gray-100"> </div>
