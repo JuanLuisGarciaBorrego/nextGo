@@ -1,18 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {Transition} from '@tailwindui/react'
-import {useFlashMessages} from "../context/FlashMessagesContext";
+import {FLASH_MESSAGE_ERROR, FLASH_MESSAGE_SUCCESS, FLASH_MESSAGE_WARNING} from "../constants/flashMessages";
 
 export default function FlashMessage({msg}) {
-    console.log('con parametros', msg.title, msg.description, msg.uuid, msg.autoClosed, msg.timeClosed)
     const [isOpen, setIsOpen] = useState(msg.status)
-    const {closedMessage} = useFlashMessages();
 
     useEffect(() => {
-        console.log('use effet render');
         if (msg.autoClosed) {
             setTimeout(() => {
                 setIsOpen(false);
-                closedMessage(msg.uuid);
             }, msg.timeClosed)
         }
     }, [])
@@ -32,11 +28,23 @@ export default function FlashMessage({msg}) {
                 <div className="p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0">
-                            <svg className="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            {msg.type === FLASH_MESSAGE_SUCCESS &&
+                            <svg className="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
+                            }
+
+                            {msg.type === FLASH_MESSAGE_WARNING &&
+                            <svg className="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            }
+
+                            {msg.type === FLASH_MESSAGE_ERROR &&
+                            <svg className="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            }
                         </div>
                         <div className="ml-3 w-0 flex-1 pt-0.5">
                             <p className="text-sm leading-5 font-medium text-gray-900">

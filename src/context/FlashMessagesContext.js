@@ -10,14 +10,11 @@ export const FlashMessagesContext = createContext({
 const FlashMessagesContextProvider = ({children}) => {
     const [messages, setMessages] = useState([]);
 
-    useEffect(() => {
-        clear();
-    }, [messages])
-
-    async function addFlashMessage(title, description = null, autoClosed = true, timeClosed = 2000) {
+    async function addFlashMessage(type, title, description = null, autoClosed = true, timeClosed = 2000) {
 
         const flashMessage = {
             uuid: uuidv4(),
+            type: type,
             title: title,
             description: description,
             autoClosed: autoClosed,
@@ -30,27 +27,10 @@ const FlashMessagesContextProvider = ({children}) => {
         return flashMessage;
     }
 
-    async function closedMessage(uuid) {
-        const updateMessages = messages.map(msg => {
-            if (msg.uuid === uuid) {
-                console.log('Eliminado', uuid)
-                return {
-                    ...msg,
-                    status: false
-                }
-            } else {
-                return msg;
-            }
-        });
-
-        setMessages(updateMessages);
-    }
-
     return (
         <FlashMessagesContext.Provider value={{
             messages,
-            addFlashMessage,
-            closedMessage
+            addFlashMessage
         }}>
             {children}
         </FlashMessagesContext.Provider>
