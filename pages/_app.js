@@ -5,12 +5,15 @@ import {DefaultSeo} from 'next-seo'
 import SEO from '../next-seo.config'
 
 import AuthContextProvider from './../src/context/AuthContext';
+import FlashMessagesContextProvider from "../src/context/FlashMessagesContext";
 
 function MyApp({Component, pageProps}) {
   return (
       <AuthContextProvider>
-        <DefaultSeo {...SEO} />
-        <Component {...pageProps} />
+          <FlashMessagesContextProvider>
+            <DefaultSeo {...SEO} />
+            <Component {...pageProps} />
+          </FlashMessagesContextProvider>
       </AuthContextProvider>
   )
 }

@@ -3,10 +3,12 @@ import DropdownMenuUser from "../nav/DropdownMenuUser";
 import {Transition} from "@tailwindui/react";
 import DropdownMenuUserNavBar from "../nav/DropdownMenuUserNavbar";
 import Link from 'next/link'
+import FlashMessage from "../FlashMessage";
+import {useFlashMessages} from "../../context/FlashMessagesContext";
 
 function LayoutBase({children}) {
     const [isOpenOffCanvas, setIsOpenOffCanvas] = useState(false);
-
+    const {messages} = useFlashMessages();
     return (
         <Fragment>
             <div className="h-screen flex overflow-hidden bg-white">
@@ -72,7 +74,7 @@ function LayoutBase({children}) {
                                         </Link>
                                     </div>
                                     <div className="mt-8">
-                                        <h3 className="px-3 text-xs leading-4 font-semibold text-gray-500 uppercase tracking-wider"
+                                        <h3 className="px-3 text-xs leading-4 font-sembold text-gray-500 uppercase tracking-wider"
                                             id="teams-headline">
                                             Configuración
                                         </h3>
@@ -166,7 +168,7 @@ function LayoutBase({children}) {
                     </div>
                 </div>
                 {/*- Main column */}
-                <div className="flex flex-col w-0 flex-1 overflow-hidden">
+                <div className="flex flex-col w-0 flex-1 overflow-hidden ">
                     {/*Search header */}
                     <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:hidden">
                         {/*Sidebar toggle, controls the 'sidebarOpen' sidebar state.*/}
@@ -182,16 +184,12 @@ function LayoutBase({children}) {
                                 <form className="w-full flex md:ml-0" action="#" method="GET">
                                     <label htmlFor="search_field" className="sr-only">Search</label>
                                     <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                                        <div
-                                            className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
                                             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" clipRule="evenodd"
-                                                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
                                             </svg>
                                         </div>
-                                        <input id="search_field"
-                                               className="block w-full h-full pl-8 pr-3 py-2 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 sm:text-sm"
-                                               placeholder="Search" type="search"/>
+                                        <input id="search_field" className="block w-full h-full pl-8 pr-3 py-2 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 sm:text-sm" placeholder="Search" type="search"/>
                                     </div>
                                 </form>
                             </div>
@@ -204,6 +202,14 @@ function LayoutBase({children}) {
                     </div>
                     <main className="flex-1 relative overflow-y-auto focus:outline-none" tabIndex="0">
                         {children}
+                        <div className="fixed inset-0 flex items-end justify-center pointer-events-none pt-20 pr-4 lg:pt-4 sm:items-start sm:justify-end pb-16">
+
+                            <div className="flex flex-col w-full items-center sm:items-end">
+                                {messages.map((item) => <FlashMessage key={item.uuid} msg={item}/>)}
+                            </div>
+                        </div>
+
+
                     </main>
                 </div>
             </div>

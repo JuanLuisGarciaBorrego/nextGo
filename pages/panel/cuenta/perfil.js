@@ -1,8 +1,11 @@
 import React from "react";
 import withAuth from "../../../src/utils/wrapper/withAuth";
 import LayoutBase from "../../../src/components/layout/LayoutBase";
+import {useFlashMessages} from "../../../src/context/FlashMessagesContext";
 
 function ProfileAccountPage() {
+    const {addFlashMessage } = useFlashMessages();
+
     return (
         <LayoutBase>
             <div className="px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
@@ -78,7 +81,7 @@ function ProfileAccountPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 md:relative p-4 md:p-0 md:mt-8 md:pt-5 border-t border-gray-200 bg-white">
+                    <div className="absolute inset-x-0 bottom-0 md:relative p-2 md:p-0 md:mt-8 md:pt-5 border-t border-gray-200 bg-red-400">
                         <div className="flex justify-between md:inline-flex">
                           <span className="rounded-md shadow-sm flex-auto md:flex-1 md:inline-flex ">
                             <button type="button" className="w-full md:w-auto py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
@@ -86,7 +89,12 @@ function ProfileAccountPage() {
                             </button>
                           </span>
                           <span className="rounded-md shadow-sm flex-auto md:flex-1 bg-blue-700 ml-3 md:inline-flex ">
-                            <button type="submit" className="w-full md:w-auto justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    addFlashMessage('Hola', 'descripción de prueba');
+                                }}
+                                type="submit" className="w-full md:w-auto justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                               Guardar
                             </button>
                           </span>
