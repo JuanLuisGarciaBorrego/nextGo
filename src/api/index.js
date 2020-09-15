@@ -1,6 +1,5 @@
 import axios from "axios";
 import {isServerRequest} from "../utils";
-import {ROUTE_LOGIN} from "../constants/routes";
 
 const BASE_URL = isServerRequest ? process.env.API_BASE_URL : process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -72,6 +71,16 @@ const API = {
             configAxios.defaults.headers.Authorization = `Bearer ${token}`
 
             return await configAxios.put(`/users`, body);
+        },
+        async changePassword(token, oldPassword, newPassword) {
+            let body = {
+                'oldPassword': oldPassword,
+                'newPassword': newPassword,
+            };
+
+            configAxios.defaults.headers.Authorization = `Bearer ${token}`
+
+            return await configAxios.put(`/users/change-password`, body);
         },
     }
 }

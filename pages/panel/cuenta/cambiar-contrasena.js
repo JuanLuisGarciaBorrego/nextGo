@@ -1,8 +1,8 @@
 import React from "react";
 import withAuth from "../../../src/utils/wrapper/withAuth";
 import LayoutBase from "../../../src/components/layout/LayoutBase";
-import EditProfile from "../../../src/components/EditProfile";
 import Link from 'next/link'
+import ChangePasswordProfile from "../../../src/components/ChangePasswordProfile";
 
 function ProfileAccountPage() {
 
@@ -18,7 +18,7 @@ function ProfileAccountPage() {
             </Link>
 
             <div className="px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 mt-2 sm:mt-4">
-                <EditProfile/>
+                <ChangePasswordProfile/>
             </div>
         </LayoutBase>
     )
