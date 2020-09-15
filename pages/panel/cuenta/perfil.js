@@ -93,7 +93,7 @@ function ProfileAccountPage() {
                             <button
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    addFlashMessage(FLASH_MESSAGE_WARNING, 'Hola', 'descripción de prueba', false);
+                                    addFlashMessage(FLASH_MESSAGE_WARNING, 'Hola', 'descripción de prueba');
                                 }}
                                 type="submit" className="w-full md:w-auto justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                               Guardar

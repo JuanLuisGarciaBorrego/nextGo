@@ -204,7 +204,7 @@ function LayoutBase({children}) {
                         {children}
                         <div className="fixed inset-0 flex items-end justify-center pointer-events-none pt-20 pr-4 lg:pt-4 sm:items-start sm:justify-end pb-16">
                             <div className="flex flex-col w-full items-center sm:items-end">
-                                {messages.filter(item => item.status).map((item) => <FlashMessage key={item.uuid} msg={item}/>)}
+                                {messages.map((item) => <FlashMessage key={item.uuid} msg={item}/>)}
                             </div>
                         </div>
                     </main>
