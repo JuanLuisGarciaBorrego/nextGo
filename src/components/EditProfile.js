@@ -10,10 +10,13 @@ import InputPassword from "./Form/InputPassword";
 import SERVER_API from "../api/server";
 import {useAuthenticated} from "../context/AuthContext";
 import {useFlashMessages} from "../context/FlashMessagesContext";
-import {FLASH_MESSAGE_SUCCESS} from "../constants/flashMessages";
+import {FLASH_MESSAGE_ERROR, FLASH_MESSAGE_SUCCESS} from "../constants/flashMessages";
 import SaveOrCancelButtons from "./Form/SaveOrCancelButtons";
+import API from "../api";
+import ErrorFieldForm from "./Form/ErrorFieldForm";
 
 function EditProfile({fixedButton = true}) {
+    const {token} = useAuthenticated();
     const {addFlashMessage} = useFlashMessages();
 
     const initialValues = {
@@ -22,30 +25,33 @@ function EditProfile({fixedButton = true}) {
         lastName: ''
     };
 
-    const handleCancel = (values) => {
-        console.log('cancel')
-    }
-
-    const handleSubmit = async (values, {setSubmitting, setErrors}) => {
-
-        console.log('kjkkkk')
+    const handleSubmit = async (values, {setSubmitting, setFieldError}) => {
         return new Promise(async () => {
             setSubmitting(true);
-            // try {
-            //     const loginResponse = await SERVER_API.security.login(values.email, values.password);
-            //     setLogin(loginResponse.data);
-            //
-            // } catch (e) {
-            //     setErrors({
-            //         'errorForm': FORMS_ERROR_LOGIN
-            //     })
-            //
-            //     await setSubmitting(false);
-            //     return;
-            // }
-            //
-            // await setSubmitting(false);
-            // return router.push(ROUTE_LOGIN_REDIRECT_SUCCESS);
+            try {
+                await API.user.editCurrentUser(token, values.email, values.name, values.lastName);
+                addFlashMessage(FLASH_MESSAGE_SUCCESS, 'Cambios guardados', 'Información de su perfil modificada.');
+            } catch (e) {
+                if (e.response.status === 400) {
+                    const constraints = e.response.data.data.constraints;
+                    const constraintsList = Object.entries(constraints);
+
+                    constraintsList.map((constraint) => {
+                        setFieldError(constraint[0], constraint[1][0]);
+                    })
+
+                    addFlashMessage(FLASH_MESSAGE_ERROR, 'Oops', 'Revise los datos del formulario.');
+                }
+
+                if(e.response.status === 500) {
+                    addFlashMessage(FLASH_MESSAGE_ERROR, 'Error desconocido', 'Se ha producido un error, por favor intentelo de nuevo más tarde.', false);
+                }
+
+                await setSubmitting(false);
+                return;
+            }
+
+            await setSubmitting(false);
         });
     }
 
@@ -63,7 +69,7 @@ function EditProfile({fixedButton = true}) {
                       errors
                   }) => {
                     return (
-                        <Form className="w-full max-w-screen-md" method="POST">
+                        <Form className="w-full max-w-screen-md" method="POST" noValidate>
                             <div className="flex">
                                 <div className="w-full">
                                     <div>
@@ -71,7 +77,7 @@ function EditProfile({fixedButton = true}) {
                                             Información personal
                                         </h3>
                                         <p className="mt-1 text-sm leading-5 text-gray-500">
-                                           Asegurese que su información sea correcta.
+                                            Asegurese que su información sea correcta.
                                         </p>
                                     </div>
 
@@ -88,6 +94,7 @@ function EditProfile({fixedButton = true}) {
                                                        autoComplete="off"
                                                        placeholder="Nombre"/>
                                             </div>
+                                            <ErrorFieldForm error={errors.name}/>
                                         </div>
 
                                         <div className="col-span-4">
@@ -102,6 +109,7 @@ function EditProfile({fixedButton = true}) {
                                                        autoComplete="off"
                                                        placeholder="Apellidos"/>
                                             </div>
+                                            <ErrorFieldForm error={errors.lastName}/>
                                         </div>
 
                                         <div className="col-span-4">
@@ -116,6 +124,7 @@ function EditProfile({fixedButton = true}) {
                                                        autoComplete="off"
                                                        placeholder="Email"/>
                                             </div>
+                                            <ErrorFieldForm error={errors.email}/>
                                         </div>
                                     </div>
                                 </div>
@@ -123,7 +132,6 @@ function EditProfile({fixedButton = true}) {
 
                             <SaveOrCancelButtons
                                 isSubmitting={isSubmitting}
-                                cancel={handleCancel}
                                 showCancel={false}
                                 fixedButton={fixedButton}
                             />

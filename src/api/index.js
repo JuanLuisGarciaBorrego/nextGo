@@ -62,6 +62,17 @@ const API = {
 
             return await configAxios.get(`/userAuthenticated`);
         },
+        async editCurrentUser(token, email, name, lastName) {
+            let body = {
+                'email': email,
+                'name': name,
+                'lastName': lastName
+            };
+
+            configAxios.defaults.headers.Authorization = `Bearer ${token}`
+
+            return await configAxios.put(`/users`, body);
+        },
     }
 }
 export default API;
@@ -69,9 +80,7 @@ export default API;
 configAxios.interceptors.response.use(function (config) {
     return config;
 }, function (error) {
-    if (error.response.status === 401) {
-        return window.location.replace(ROUTE_LOGIN);
-    }
+
     return Promise.reject(error);
 });
 
