@@ -13,18 +13,18 @@ import {useFlashMessages} from "../context/FlashMessagesContext";
 import {FLASH_MESSAGE_SUCCESS} from "../constants/flashMessages";
 import SaveOrCancelButtons from "./Form/SaveOrCancelButtons";
 
-function EditProfile({fixedButton = true}) {
+function ChangePassword({fixedButton = false}) {
     const {addFlashMessage} = useFlashMessages();
 
     const initialValues = {
-        email: '',
-        name: '',
-        lastName: ''
+        newPassword: '',
+        oldPassword: ''
     };
 
-    const handleCancel = (values) => {
-        console.log('cancel')
-    }
+    // const handleSubmit =  (e) => {
+    //     e.preventDefault();
+    //     addFlashMessage(FLASH_MESSAGE_SUCCESS, 'Hola', 'descripción de prueba');
+    // }
 
     const handleSubmit = async (values, {setSubmitting, setErrors}) => {
 
@@ -65,56 +65,39 @@ function EditProfile({fixedButton = true}) {
                     return (
                         <Form className="w-full max-w-screen-md" method="POST">
                             <div className="flex">
-                                <div className="w-full">
+                                <div className="mt-2 pt-2 md:mt-4 md:pt-4 w-full">
                                     <div>
                                         <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                            Información personal
+                                            Cambiar contraseña
                                         </h3>
-                                        <p className="mt-1 text-sm leading-5 text-gray-500">
-                                           Asegurese que su información sea correcta.
-                                        </p>
                                     </div>
 
                                     <div className="mt-6 grid grid-cols-6 gap-y-4 gap-x-4">
-                                        <div className="col-span-2">
+
+                                        <div className="col-span-6">
                                             <label htmlFor="first_name"
                                                    className="block text-sm font-medium leading-5 text-gray-700">
-                                                Nombre
+                                                Contraseña actual
                                             </label>
                                             <div className="mt-1 rounded-md shadow-sm leading-normal">
-                                                <Field aria-label="name" name="name" type="text"
-                                                       required
-                                                       className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
-                                                       autoComplete="off"
-                                                       placeholder="Nombre"/>
+                                                <InputPassword
+                                                    name="oldPassword"
+                                                    onChange={handleChange}
+                                                    cssInput='p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none'
+                                                />
                                             </div>
                                         </div>
-
-                                        <div className="col-span-4">
-                                            <label htmlFor="last_name"
+                                        <div className="col-span-6">
+                                            <label htmlFor="first_name"
                                                    className="block text-sm font-medium leading-5 text-gray-700">
-                                                Apellidos
+                                                Nueva contraseña
                                             </label>
-                                            <div className="mt-1 rounded-md shadow-sm">
-                                                <Field aria-label="lastName" name="lastName" type="text"
-                                                       required
-                                                       className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
-                                                       autoComplete="off"
-                                                       placeholder="Apellidos"/>
-                                            </div>
-                                        </div>
-
-                                        <div className="col-span-4">
-                                            <label htmlFor="email"
-                                                   className="block text-sm font-medium leading-5 text-gray-700">
-                                                Email
-                                            </label>
-                                            <div className="mt-1 rounded-md shadow-sm">
-                                                <Field aria-label="email" name="email" type="email"
-                                                       required
-                                                       className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
-                                                       autoComplete="off"
-                                                       placeholder="Email"/>
+                                            <div className="mt-1 rounded-md shadow-sm leading-normal">
+                                                <InputPassword
+                                                    name="newPassword"
+                                                    onChange={handleChange}
+                                                    cssInput='p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none'
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -123,9 +106,8 @@ function EditProfile({fixedButton = true}) {
 
                             <SaveOrCancelButtons
                                 isSubmitting={isSubmitting}
-                                cancel={handleCancel}
-                                showCancel={false}
                                 fixedButton={fixedButton}
+                                showCancel={false}
                             />
                         </Form>
                     )
@@ -135,4 +117,4 @@ function EditProfile({fixedButton = true}) {
     )
 }
 
-export default EditProfile;
+export default ChangePassword;

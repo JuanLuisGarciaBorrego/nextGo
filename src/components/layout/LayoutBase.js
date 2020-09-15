@@ -118,7 +118,7 @@ function LayoutBase({children}) {
                                             <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <input id="search" className="p-2 form-input block w-full pl-8 sm:text-sm sm:leading-5 rounded-md border border-gray-400 focus:outline-none" placeholder="Search"/>
+                                    <input id="search" className="p-2 form-input block w-full pl-8 sm:text-sm sm:leading-5 rounded-md border border-gray-400 focus:outline-none" placeholder="Buscar"/>
                                 </div>
                             </div>
                             {/*Navigation */}
@@ -189,7 +189,7 @@ function LayoutBase({children}) {
                                                 <path fillRule="evenodd" clipRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
                                             </svg>
                                         </div>
-                                        <input id="search_field" className="block w-full h-full pl-8 pr-3 py-2 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 sm:text-sm" placeholder="Search" type="search"/>
+                                        <input id="search_field" className="block w-full h-full pl-8 pr-3 py-2 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 sm:text-sm" placeholder="Buscar" type="search"/>
                                     </div>
                                 </form>
                             </div>
@@ -200,6 +200,8 @@ function LayoutBase({children}) {
                             </div>
                         </div>
                     </div>
+
+
                     <main className="flex-1 relative overflow-y-auto focus:outline-none" tabIndex="0">
                         {children}
                         <div className="fixed inset-0 flex items-end justify-center pointer-events-none pt-20 pr-4 lg:pt-4 sm:items-start sm:justify-end pb-16">
