@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 /*
 *<InputPassword name="password" onChange={() => {}} cssInput='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'/>
 * */
-export default function InputPassword({onChange, name = 'password', placeholder='Contraseña', css='', cssInput=''}) {
+export default function InputPassword({onChange, name = 'password', placeholder='Contraseña', css='', cssInput='', reset = null}) {
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -17,6 +17,7 @@ export default function InputPassword({onChange, name = 'password', placeholder=
                    type={`${showPassword ? 'text' : 'password'}`}
                    required
                    onChange={onChange}
+                   onReset={reset}
                    className={cssInput}
                    placeholder={placeholder}/>
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"  onClick={handleShowPassword}>
