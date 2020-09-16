@@ -1,29 +1,56 @@
-import React, {useEffect, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import withAuth from "../../src/utils/wrapper/withAuth";
 import LayoutBase from "../../src/components/layout/LayoutBase";
 import Link from "next/link";
 import API from "../../src/api";
 import {useAuthenticated} from "../../src/context/AuthContext";
 import UserList from "../../src/components/List/UserList";
-import UserTypeTag from "../../src/components/UserTypeTag";
 import {Transition} from "@tailwindui/react";
+import {buildInfoPaginationObject} from "../../src/utils";
+import Pagination from "../../src/components/List/Pagination";
 
 function UsersPage() {
     const {token} = useAuthenticated();
     const [data, setData] = useState([]);
     const [info, setInfo] = useState([]);
     const [hasFilter, setHasFilter] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function getData() {
             const response = await API.user.list(token);
-            console.log(response.data.collection);
             setData(response.data.collection.data);
-            setInfo(response.data.collection.pagination);
+            setInfo(buildInfoPaginationObject(response.data.collection.pagination));
         }
 
         getData();
     }, []);
+    console.log(info);
+
+    const handlePagination = async (type) => {
+        let page = info.page + 1;
+
+        if (type === 'previous') {
+            page = info.page - 1;
+        }
+
+        setLoading(true);
+        console.log(page)
+        const response = await API.user.list(token, page);
+        setData(response.data.collection.data);
+        setInfo(buildInfoPaginationObject(response.data.collection.pagination));
+
+        setLoading(false);
+    }
+    const handleNextPage = async (e) => {
+        e.preventDefault();
+        await handlePagination('next')
+    }
+
+    const handlePreviousPage = async (e) => {
+        e.preventDefault();
+        await handlePagination('previous')
+    }
 
     return (
         <LayoutBase>
@@ -93,61 +120,6 @@ function UsersPage() {
                                                     <div className="relative rounded-md shadow-sm">
                                                                         <textarea id="description" rows="4"
                                                                                   className="form-input block w-full sm:text-sm sm:leading-5 transition ease-in-out duration-150"> </textarea>
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <h3 className="text-sm font-medium leading-5 text-gray-900">
-                                                        Team Members
-                                                    </h3>
-                                                    <div>
-                                                        <div className="flex space-x-2">
-                                                            <a href="#"
-                                                               className="rounded-full hover:opacity-75 focus:outline-none focus:shadow-outline transition ease-in-out duration-150">
-                                                                <img
-                                                                    className="inline-block h-8 w-8 rounded-full"
-                                                                    src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                                                    alt="Tom Warner"/>
-                                                            </a>
-                                                            <a href="#"
-                                                               className="rounded-full hover:opacity-75 focus:outline-none focus:shadow-outline transition ease-in-out duration-150">
-                                                                <img
-                                                                    className="inline-block h-8 w-8 rounded-full"
-                                                                    src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                                                    alt="Sally Preston"/>
-                                                            </a>
-                                                            <a href="#"
-                                                               className="rounded-full hover:opacity-75 focus:outline-none focus:shadow-outline transition ease-in-out duration-150">
-                                                                <img
-                                                                    className="inline-block h-8 w-8 rounded-full"
-                                                                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
-                                                                    alt="Dave Gusman"/>
-                                                            </a>
-                                                            <a href="#"
-                                                               className="rounded-full hover:opacity-75 focus:outline-none focus:shadow-outline transition ease-in-out duration-150">
-                                                                <img
-                                                                    className="inline-block h-8 w-8 rounded-full"
-                                                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                                                    alt="Tom Cook"/>
-                                                            </a>
-                                                            <a href="#"
-                                                               className="rounded-full hover:opacity-75 focus:outline-none focus:shadow-outline transition ease-in-out duration-150">
-                                                                <img
-                                                                    className="inline-block h-8 w-8 rounded-full"
-                                                                    src="https://images.unsplash.com/photo-1586297098710-0382a496c814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80"
-                                                                    alt="Brandon Rogers"/>
-                                                            </a>
-                                                            <button type="button"
-                                                                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-gray-200 text-gray-400 hover:text-gray-500 hover:border-gray-300 focus:text-gray-500 focus:border-gray-300 focus:outline-none transition ease-in-out duration-150"
-                                                                    aria-label="Add team member">
-
-                                                                <svg className="h-5 w-5" viewBox="0 0 20 20"
-                                                                     fill="currentColor">
-                                                                    <path fill-rule="evenodd"
-                                                                          d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                                                          clip-rule="evenodd"/>
-                                                                </svg>
-                                                            </button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 <fieldset className="space-y-2">
@@ -223,56 +195,20 @@ function UsersPage() {
                                                     </div>
                                                 </fieldset>
                                             </div>
-                                            <div className="space-y-4 pt-4 pb-6">
-                                                <div className="flex text-sm leading-5">
-                                                    <a href="#"
-                                                       className="group space-x-2 inline-flex items-center font-medium text-indigo-600 hover:text-indigo-900 transition ease-in-out duration-150">
-
-                                                        <svg
-                                                            className="h-5 w-5 text-indigo-500 group-hover:text-indigo-900 transition ease-in-out duration-150"
-                                                            viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd"
-                                                                  d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
-                                                                  clip-rule="evenodd"/>
-                                                        </svg>
-                                                        <span>
-                            Copy link
-                          </span>
-                                                    </a>
-                                                </div>
-                                                <div className="flex text-sm leading-5">
-                                                    <a href="#"
-                                                       className="group space-x-2 inline-flex items-center text-gray-500 hover:text-gray-900 transition ease-in-out duration-150">
-
-                                                        <svg
-                                                            className="h-5 w-5 text-gray-400 group-hover:text-gray-500 transition ease-in-out duration-150"
-                                                            viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd"
-                                                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                                                                  clip-rule="evenodd"/>
-                                                        </svg>
-                                                        <span>
-                            Learn more about sharing
-                          </span>
-                                                    </a>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex-shrink-0 px-4 py-4 space-x-4 flex justify-end">
-                                                    <span className="inline-flex rounded-md shadow-sm">
-                                                      <button type="button"
-                                                              className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                                        Cancel
-                                                      </button>
-                                                    </span>
+                                <div className="flex-shrink-0 px-4 py-4 space-x-4 flex justify-between">
                                     <span className="inline-flex rounded-md shadow-sm">
-                                                      <button type="submit"
-                                                              className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                                        Save
-                                                      </button>
-                                                    </span>
+                                      <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                                        Borrar filtros
+                                      </button>
+                                    </span>
+                                    <span className="inline-flex rounded-md shadow-sm">
+                                      <button onClick={() => setHasFilter(false)} type="button" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                        Listo
+                                      </button>
+                                    </span>
                                 </div>
                             </div>
                         </Transition.Child>
@@ -300,10 +236,10 @@ function UsersPage() {
                     </p>
 
                     <div className="mt-5 bg-white shadow overflow-hidden sm:rounded">
-                        <div className="block focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out p-4">
+                        <div className="block focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out p-4 pb-0">
                             <div className="flex">
                                 <div className="min-w-0 flex-1 flex">
-                                    <div className="w-full bg-blue-700 border flex border-r-0 rounded-l">
+                                    <div className="w-full border flex border-r-0 rounded-l">
                                         <label htmlFor="search" className="sr-only">Buscar</label>
                                         <div className="relative text-gray-700 focus-within:text-gray-400 flex w-full">
 
@@ -342,9 +278,21 @@ function UsersPage() {
                             </div>
                         </div>
 
-                        <ul>
+                        <div className="px-4 pt-4 overflow-x-auto">
+                            <div className="inline-flex flex justify-between items-baseline rounded-md text-sm font-medium leading-5 bg-gray-200 text-gray-600 mr-2">
+                                <span className="p-1 border-r ">Filtro</span>
+                                <svg className="flex-shrink-0 self-center h-4 w-4 text-gray-600 cursor-pointer hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </div>
+
+                        </div>
+
+                        <ul className="pt-4">
                             {data.map((item, key) => <UserList item={item} key={key} />)}
                         </ul>
+
+                        <Pagination info={info} totalItem={data.length} handleNextPage={handleNextPage} handlePreviousPage={handlePreviousPage}/>
                     </div>
 
                 </div>

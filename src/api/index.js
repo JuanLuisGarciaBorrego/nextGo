@@ -1,5 +1,6 @@
 import axios from "axios";
 import {isServerRequest} from "../utils";
+import * as queryString from "querystring";
 
 const BASE_URL = isServerRequest ? process.env.API_BASE_URL : process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -82,10 +83,17 @@ const API = {
 
             return await configAxios.put(`/users/change-password`, body);
         },
-        async list(token) {
+        async list(token, page = 1, parameters = {}) {
             configAxios.defaults.headers.Authorization = `Bearer ${token}`
 
-            return await configAxios.get(`/users`);
+            let params = {
+                page: page ? page : 1,
+                ...parameters
+            };
+
+            const query = queryString.stringify(params);
+            console.log(`/users?${query}`);
+            return await configAxios.get(`/users?${query}`);
         },
     }
 }
