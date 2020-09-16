@@ -27,7 +27,7 @@ export default function DropdownMenuUser() {
                             </span>
                             <div className="flex-1 pl-2">
                                 <h2 className="text-gray-900 text-sm leading-5 font-medium text-left">Mi cuenta</h2>
-                                <h3 className="text-gray-500 text-sm leading-5 truncate text-left">{user?.name} {user?.lastName}</h3>
+                                <h3 className="text-indigo-600 text-sm leading-5 truncate text-left">{user?.name} {user?.lastName}</h3>
                             </div>
                         </div>
                         <svg className="h-5 w-5 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor">

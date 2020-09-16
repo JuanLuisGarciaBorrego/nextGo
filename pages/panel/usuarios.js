@@ -9,12 +9,13 @@ import {Transition} from "@tailwindui/react";
 import {buildInfoPaginationObject} from "../../src/utils";
 import Pagination from "../../src/components/List/Pagination";
 import LoadingList from "../../src/components/List/LoadingList";
+import RowFilter from "../../src/components/Filter/RowFilter";
 
 function UsersPage() {
     const {token} = useAuthenticated();
     const [data, setData] = useState([]);
     const [info, setInfo] = useState([]);
-    const [hasFilter, setHasFilter] = useState(false);
+    const [showFilter, setShowFilter] = useState(true);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -28,6 +29,18 @@ function UsersPage() {
         getData();
     }, []);
 
+    //filters
+    const [filterUsed, setFilterUsed] = useState([]);
+    const filters = [
+        {
+            title: '¿Usuario bloqueado?', description: 'Description', type: 'radio', name: 'status', group: [
+                {label: 'Bloqueado', value: false, checked: false},
+                {label: 'Activo', value: true, checked: false}
+            ],
+        }
+    ];
+
+    //pagination
     const handlePagination = async (type) => {
         let page = info.page + 1;
 
@@ -45,7 +58,6 @@ function UsersPage() {
         e.preventDefault();
         await handlePagination('next')
     }
-
     const handlePreviousPage = async (e) => {
         e.preventDefault();
         await handlePagination('previous')
@@ -53,10 +65,10 @@ function UsersPage() {
 
     return (
         <LayoutBase>
-            <Transition show={hasFilter}>
+            <Transition show={showFilter}>
                 <div className="fixed inset-0 overflow-hidden z-40">
                     <Transition.Child
-                        show={hasFilter}
+                        show={showFilter.toString()}
                         enter="transition-opacity ease-linear duration-300"
                         enterFrom="opacity-0"
                         enterTo="opacity-100"
@@ -64,7 +76,7 @@ function UsersPage() {
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                         className="absolute inset-0 overflow-hidden"
-                        onClick={() => setHasFilter(false)}
+                        onClick={() => setShowFilter(false)}
                     >
                         <></>
                     </Transition.Child>
@@ -73,7 +85,7 @@ function UsersPage() {
                     {/*</div>*/}
                     <section className="absolute inset-y-0 max-w-full right-0 flex">
                         <Transition.Child
-                            show={hasFilter}
+                            show={showFilter.toString()}
                             enter="transform transition ease-in-out duration-500 sm:duration-700"
                             enterFrom="translate-x-full"
                             enterTo="translate-x-0"
@@ -84,13 +96,13 @@ function UsersPage() {
                         >
                             <div className="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-xl">
                                 <div className="flex-1 h-0 overflow-y-auto">
-                                    <header className="space-y-1 py-4 px-4 bg-indigo-700 sm:px-6">
+                                    <header className="space-y-1 py-4 px-4 bg-gray-200 sm:px-6">
                                         <div className="flex items-center justify-between space-x-3">
-                                            <h2 className="text-lg leading-7 font-medium text-white">
+                                            <h2 className="text-lg leading-7 text-gray-800">
                                                 Filtros
                                             </h2>
                                             <div className="h-7 flex items-center">
-                                                <button aria-label="Close panel" onClick={() => setHasFilter(false)} className="text-indigo-200 hover:text-white transition ease-in-out duration-150">
+                                                <button aria-label="Close panel" onClick={() => setShowFilter(false)} className="text-gray-600 hover:text-white transition ease-in-out duration-150">
                                                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
                                                     </svg>
@@ -99,102 +111,8 @@ function UsersPage() {
                                         </div>
                                     </header>
                                     <div className="flex-1 flex flex-col justify-between">
-                                        <div className="px-4 divide-y divide-gray-200 sm:px-6">
-                                            <div className="space-y-6 pt-6 pb-5">
-                                                <div className="space-y-1">
-                                                    <label htmlFor="project_name"
-                                                           className="block text-sm font-medium leading-5 text-gray-900">
-                                                        Project name
-                                                    </label>
-                                                    <div className="relative rounded-md shadow-sm">
-                                                        <input id="project_name"
-                                                               className="form-input block w-full sm:text-sm sm:leading-5 transition ease-in-out duration-150"/>
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <label htmlFor="description"
-                                                           className="block text-sm font-medium leading-5 text-gray-900">
-                                                        Description
-                                                    </label>
-                                                    <div className="relative rounded-md shadow-sm">
-                                                                        <textarea id="description" rows="4"
-                                                                                  className="form-input block w-full sm:text-sm sm:leading-5 transition ease-in-out duration-150"> </textarea>
-                                                    </div>
-                                                </div>
-                                                <fieldset className="space-y-2">
-                                                    <legend
-                                                        className="text-sm leading-5 font-medium text-gray-900">
-                                                        Privacy
-                                                    </legend>
-                                                    <div className="space-y-5">
-                                                        <div className="relative flex items-start">
-                                                            <div className="absolute flex items-center h-5">
-                                                                <input id="privacy_public"
-                                                                       aria-describedby="privacy_public_description"
-                                                                       type="radio" name="privacy"
-                                                                       className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"/>
-                                                            </div>
-                                                            <div className="pl-7 text-sm leading-5">
-                                                                <label htmlFor="privacy_public"
-                                                                       className="font-medium text-gray-900">
-                                                                    Public access
-                                                                </label>
-                                                                <p id="privacy_public_description"
-                                                                   className="text-gray-500">
-                                                                    Everyone with the link will see this
-                                                                    project.
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <div className="relative flex items-start">
-                                                                <div
-                                                                    className="absolute flex items-center h-5">
-                                                                    <input id="privacy_private-to-project"
-                                                                           aria-describedby="privacy_private-to-project_description"
-                                                                           type="radio" name="privacy"
-                                                                           className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"/>
-                                                                </div>
-                                                                <div className="pl-7 text-sm leading-5">
-                                                                    <label
-                                                                        htmlFor="privacy_private-to-project"
-                                                                        className="font-medium text-gray-900">
-                                                                        Private to project members
-                                                                    </label>
-                                                                    <p id="privacy_private-to-project_description"
-                                                                       className="text-gray-500">
-                                                                        Only members of this project would
-                                                                        be able to access.
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <div className="relative flex items-start">
-                                                                <div
-                                                                    className="absolute flex items-center h-5">
-                                                                    <input id="privacy_private"
-                                                                           aria-describedby="privacy_private-to-project_description"
-                                                                           type="radio" name="privacy"
-                                                                           className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"/>
-                                                                </div>
-                                                                <div className="pl-7 text-sm leading-5">
-                                                                    <label htmlFor="privacy_private"
-                                                                           className="font-medium text-gray-900">
-                                                                        Private to you
-                                                                    </label>
-                                                                    <p id="privacy_private_description"
-                                                                       className="text-gray-500">
-                                                                        You are the only one able to access
-                                                                        this project.
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                        </div>
+                                       <RowFilter />
+                                        <RowFilter />
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-4 py-4 space-x-4 flex justify-between">
@@ -204,7 +122,7 @@ function UsersPage() {
                                       </button>
                                     </span>
                                     <span className="inline-flex rounded-md shadow-sm">
-                                      <button onClick={() => setHasFilter(false)} type="button" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                      <button onClick={() => setShowFilter(false)} type="button" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                                         Listo
                                       </button>
                                     </span>
@@ -260,7 +178,7 @@ function UsersPage() {
                                         </div>
                                     </div>
                                     <div>
-                                        <button onClick={() => setHasFilter(true)}
+                                        <button onClick={() => setShowFilter(true)}
                                             type="button" className="truncate inline-flex justify-center py-2 px-4 border border-r-0 border-l-0 text-sm leading-5 font-medium text-gray-700 bg-indigo-white hover:bg-gray-100 focus:outline-none  transition duration-150 ease-in-out">
                                             Filtros
                                         </button>

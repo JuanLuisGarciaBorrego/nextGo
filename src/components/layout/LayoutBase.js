@@ -19,7 +19,7 @@ function LayoutBase({children}) {
                     <Transition show={isOpenOffCanvas}>
                     <div className="fixed inset-0 flex z-10  ">
                         <Transition.Child
-                            show={isOpenOffCanvas}
+                            show={isOpenOffCanvas.toString()}
                             enter="transition-opacity ease-linear duration-300"
                             enterFrom="opacity-0"
                             enterTo="opacity-100"
@@ -31,7 +31,7 @@ function LayoutBase({children}) {
                             <div className="absolute inset-0 bg-gray-600 opacity-75" onClick={() => setIsOpenOffCanvas(false)}> </div>
                         </Transition.Child>
                         <Transition.Child
-                            show={isOpenOffCanvas}
+                            show={isOpenOffCanvas.toString()}
                             enter="transition ease-in-out duration-300 transform"
                             enterFrom="-translate-x-full"
                             enterTo="translate-x-0"
