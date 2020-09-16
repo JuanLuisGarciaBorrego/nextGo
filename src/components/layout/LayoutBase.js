@@ -5,10 +5,13 @@ import DropdownMenuUserNavBar from "../nav/DropdownMenuUserNavbar";
 import Link from 'next/link'
 import FlashMessage from "../FlashMessage";
 import {useFlashMessages} from "../../context/FlashMessagesContext";
+import {useRouter} from "next/router";
 
 function LayoutBase({children}) {
     const [isOpenOffCanvas, setIsOpenOffCanvas] = useState(false);
     const {messages} = useFlashMessages();
+    const {asPath} = useRouter();
+
     return (
         <Fragment>
             <div className="h-screen flex overflow-hidden bg-white">
@@ -52,7 +55,7 @@ function LayoutBase({children}) {
                                     <div className="space-y-1">
                                         <Link href="/">
                                             <a href="/"
-                                               className="group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md text-gray-900 bg-gray-100 hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-200 focus:outline-none transition ease-in-out duration-150">
+                                               className={`group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md text-gray-700 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150 hover:text-gray-900 hover:bg-gray-50  ${asPath === '/' && 'bg-gray-200'}`}>
                                                 <svg
                                                     className="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150"
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -64,12 +67,21 @@ function LayoutBase({children}) {
                                         </Link>
                                         <Link href="/panel">
                                             <a href="/panel"
-                                               className="group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition ease-in-out duration-150">
+                                               className={`group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md text-gray-700 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150 hover:text-gray-900 hover:bg-gray-50  ${asPath === '/panel' && 'bg-gray-200'}`}>
                                                 <svg className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150"
                                                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                                                 </svg>
                                                 Panel
+                                            </a>
+                                        </Link>
+                                        <Link href="/panel/usuarios">
+                                            <a href="/panel/usuarios"
+                                               className={`group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md text-gray-700 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150 hover:text-gray-900 hover:bg-gray-50  ${asPath === '/panel/usuarios' && 'bg-gray-200'}`}>
+                                                <svg className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                </svg>
+                                                Usuarios
                                             </a>
                                         </Link>
                                     </div>
@@ -99,7 +111,7 @@ function LayoutBase({children}) {
                 </div>
                 {/*Static sidebar for desktop */}
                 <div className="hidden lg:flex lg:flex-shrink-0">
-                    <div className="flex flex-col w-64 border-r border-gray-200 pt-5 pb-4 bg-gray-100">
+                    <div className="flex flex-col w-64 border-r border-gray-200 pt-5 pb-4 bg-white">
                         <div className="flex items-center flex-shrink-0 px-6">
                             <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-purple-on-white.svg" alt="Workflow"/>
                         </div>
@@ -125,9 +137,9 @@ function LayoutBase({children}) {
                             <nav className="px-3 mt-6">
                                 <div className="space-y-1">
                                     <Link href="/">
-                                        <a href="/" className="group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md text-gray-900 bg-gray-200 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150">
-                                            <svg
-                                                className="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150"
+                                        <a  href="/"
+                                            className={`group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md text-gray-700 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150 hover:text-gray-900 hover:bg-gray-50  ${asPath === '/' && 'bg-gray-200'}`}>
+                                            <svg className="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150"
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                                       d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
@@ -137,12 +149,20 @@ function LayoutBase({children}) {
                                     </Link>
                                     <Link href="/panel">
                                         <a href="/panel"
-                                           className="group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150">
-                                            <svg className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                           className={`group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md text-gray-700 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150 hover:text-gray-900 hover:bg-gray-50  ${asPath === '/panel' && 'bg-gray-200'}`}>
+                                            <svg className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                                             </svg>
                                             Panel
+                                        </a>
+                                    </Link>
+                                    <Link href="/panel/usuarios">
+                                        <a href="/panel/usuarios"
+                                           className={`group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md text-gray-700 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150 hover:text-gray-900 hover:bg-gray-50  ${asPath === '/panel/usuarios' && 'bg-gray-200'}`}>
+                                            <svg className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                            Usuarios
                                         </a>
                                     </Link>
 
@@ -202,7 +222,7 @@ function LayoutBase({children}) {
                     </div>
 
 
-                    <main className="flex-1 relative overflow-y-auto focus:outline-none" tabIndex="0">
+                    <main className="flex-1 relative overflow-y-auto focus:outline-none bg-gray-100" tabIndex="0">
                         {children}
                         <div className="fixed inset-0 flex items-end justify-center pointer-events-none pt-20 pr-4 lg:pt-4 sm:items-start sm:justify-end pb-16">
                             <div className="flex flex-col w-full items-center sm:items-end">

@@ -82,6 +82,11 @@ const API = {
 
             return await configAxios.put(`/users/change-password`, body);
         },
+        async list(token) {
+            configAxios.defaults.headers.Authorization = `Bearer ${token}`
+
+            return await configAxios.get(`/users`);
+        },
     }
 }
 export default API;
