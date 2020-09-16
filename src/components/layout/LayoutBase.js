@@ -229,6 +229,7 @@ function LayoutBase({children}) {
                                 {messages.map((item) => <FlashMessage key={item.uuid} msg={item}/>)}
                             </div>
                         </div>
+
                     </main>
                 </div>
             </div>
