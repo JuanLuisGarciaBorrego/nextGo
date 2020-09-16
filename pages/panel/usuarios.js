@@ -8,24 +8,25 @@ import UserList from "../../src/components/List/UserList";
 import {Transition} from "@tailwindui/react";
 import {buildInfoPaginationObject} from "../../src/utils";
 import Pagination from "../../src/components/List/Pagination";
+import LoadingList from "../../src/components/List/LoadingList";
 
 function UsersPage() {
     const {token} = useAuthenticated();
     const [data, setData] = useState([]);
     const [info, setInfo] = useState([]);
     const [hasFilter, setHasFilter] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function getData() {
             const response = await API.user.list(token);
             setData(response.data.collection.data);
             setInfo(buildInfoPaginationObject(response.data.collection.pagination));
+            setLoading(false);
         }
 
         getData();
     }, []);
-    console.log(info);
 
     const handlePagination = async (type) => {
         let page = info.page + 1;
@@ -35,11 +36,9 @@ function UsersPage() {
         }
 
         setLoading(true);
-        console.log(page)
         const response = await API.user.list(token, page);
         setData(response.data.collection.data);
         setInfo(buildInfoPaginationObject(response.data.collection.pagination));
-
         setLoading(false);
     }
     const handleNextPage = async (e) => {
@@ -278,21 +277,26 @@ function UsersPage() {
                             </div>
                         </div>
 
-                        <div className="px-4 pt-4 overflow-x-auto">
+                        <div className="px-4 pt-4 overflow-x-auto pb-4">
                             <div className="inline-flex flex justify-between items-baseline rounded-md text-sm font-medium leading-5 bg-gray-200 text-gray-600 mr-2">
                                 <span className="p-1 border-r ">Filtro</span>
                                 <svg className="flex-shrink-0 self-center h-4 w-4 text-gray-600 cursor-pointer hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </div>
-
                         </div>
 
-                        <ul className="pt-4">
-                            {data.map((item, key) => <UserList item={item} key={key} />)}
-                        </ul>
+                        {loading && <LoadingList/>}
 
-                        <Pagination info={info} totalItem={data.length} handleNextPage={handleNextPage} handlePreviousPage={handlePreviousPage}/>
+                        {!loading &&
+                        <Fragment>
+                            <ul>
+                                {data.map((item, key) => <UserList item={item} key={key} />)}
+                            </ul>
+
+                            <Pagination info={info} totalItem={data.length} handleNextPage={handleNextPage} handlePreviousPage={handlePreviousPage}/>
+                        </Fragment>
+                        }
                     </div>
 
                 </div>

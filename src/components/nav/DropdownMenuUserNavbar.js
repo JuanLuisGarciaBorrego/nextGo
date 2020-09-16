@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import { Transition } from '@tailwindui/react'
 import OutsideClickHandler from "react-outside-click-handler";
 import ItemsNavDropdown from "./ItemsNavDropdown";

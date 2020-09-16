@@ -92,7 +92,6 @@ const API = {
             };
 
             const query = queryString.stringify(params);
-            console.log(`/users?${query}`);
             return await configAxios.get(`/users?${query}`);
         },
     }
