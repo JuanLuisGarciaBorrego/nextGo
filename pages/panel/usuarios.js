@@ -11,11 +11,45 @@ import Pagination from "../../src/components/List/Pagination";
 import LoadingList from "../../src/components/List/LoadingList";
 import RowFilter from "../../src/components/Filter/RowFilter";
 
+const allFilters = [
+    {
+        title: 'Buscador',
+        description: 'Buscar por nombre',
+        shortTitle: 'Búsqueda',
+        type: 'text',
+        name: 'query',
+        group: [],
+        isUsed: false,
+        labelDefined: '',
+        valueDefined: '',
+        attr: {
+            type: 'search',
+            placeholder: 'Escribe el nombre a buscar',
+            autoComplete: false
+        },
+        main: true
+    },
+    {
+        title: '¿Usuario bloqueado?',
+        description: 'Filtrar por usuarios bloqueados o activos',
+        shortTitle: 'Usuario',
+        type: 'radio',
+        name: 'status',
+        group: [
+            {id: 'status_block', label: 'Bloqueado', value: false, checked: false},
+            {id: 'status_unblock', label: 'Activo', value: true, checked: false}
+        ],
+        isUsed: false,
+        labelDefined: '',
+        valueDefined: '',
+        main: false
+    }
+];
+
 function UsersPage() {
     const {token} = useAuthenticated();
     const [data, setData] = useState([]);
     const [info, setInfo] = useState([]);
-    const [showFilter, setShowFilter] = useState(true);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -30,15 +64,95 @@ function UsersPage() {
     }, []);
 
     //filters
-    const [filterUsed, setFilterUsed] = useState([]);
-    const filters = [
-        {
-            title: '¿Usuario bloqueado?', description: 'Description', type: 'radio', name: 'status', group: [
-                {label: 'Bloqueado', value: false, checked: false},
-                {label: 'Activo', value: true, checked: false}
-            ],
+    const [filters, setFilters] = useState(allFilters)
+    const [showFilter, setShowFilter] = useState(true);
+
+    const onChangeFilter = async (e, content) => {
+        //update filter
+        let filterChange = null;
+        let updateGroup = [];
+
+        if(content.type === 'radio') {
+            updateGroup = content.data.group.map((item) => {
+                if(content.subData.id === item.id) {
+                    filterChange = {labelDefined: item.label, valueDefined: item.label};
+                    return {
+                        ...item,
+                        checked: true
+                    }
+                } else{
+                    return {
+                        ...item,
+                        checked: false
+                    }
+                }
+            })
         }
-    ];
+
+        if(content.type === 'text') {
+            filterChange = {labelDefined: content.data.shortTitle, valueDefined: e.target.value};
+        }
+
+        const updateFilter = {
+            ...content.data,
+            group : updateGroup,
+            isUsed: true,
+            labelDefined: filterChange.labelDefined,
+            valueDefined: filterChange.valueDefined
+        };
+
+        const update = filters.map(item => {
+            if (item.name === content.data.name) {
+                return updateFilter;
+            } else {
+                return item;
+            }
+        })
+
+        setFilters(update);
+    }
+
+    const removeFilter = async(filter) => {
+        let updateFilter = [];
+
+        if(filter.type === 'radio') {
+            const updateGroup = filter.group.map(item => {
+                return {
+                    ...item,
+                    checked: false,
+                }
+            })
+
+            updateFilter = {
+                ...filter,
+                group: updateGroup,
+                isUsed: false
+            }
+        }
+
+        if(filter.type === 'text') {
+            updateFilter = {
+                ...filter,
+                labelDefined: '',
+                valueDefined: '',
+                isUsed: false
+            }
+        }
+
+        const updateFilters = filters.map(item => {
+            if(item.name === filter.name) {
+                return updateFilter
+            }else{
+                return item;
+            }
+        })
+
+        setFilters(updateFilters);
+    }
+
+    const removeAllFilter = () => {
+        setFilters(allFilters);
+    }
 
     //pagination
     const handlePagination = async (type) => {
@@ -62,6 +176,8 @@ function UsersPage() {
         e.preventDefault();
         await handlePagination('previous')
     }
+
+    const search = filters.find(item => item.main);
 
     return (
         <LayoutBase>
@@ -102,28 +218,33 @@ function UsersPage() {
                                                 Filtros
                                             </h2>
                                             <div className="h-7 flex items-center">
-                                                <button aria-label="Close panel" onClick={() => setShowFilter(false)} className="text-gray-600 hover:text-white transition ease-in-out duration-150">
-                                                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                                                <button aria-label="Close panel" onClick={() => setShowFilter(false)}
+                                                        className="text-gray-600 hover:text-white transition ease-in-out duration-150">
+                                                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                                         stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round"
+                                                              strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
                                                     </svg>
                                                 </button>
                                             </div>
                                         </div>
                                     </header>
                                     <div className="flex-1 flex flex-col justify-between">
-                                       <RowFilter />
-                                        <RowFilter />
+                                        {filters.map((item, key) => <RowFilter key={key} data={item} filters={filters} onChangeFilter={onChangeFilter} removeFilter={removeFilter}/>)}
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-4 py-4 space-x-4 flex justify-between">
                                     <span className="inline-flex rounded-md shadow-sm">
-                                      <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                                      <button type="button"
+                                              onClick={removeAllFilter}
+                                              className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                                         Borrar filtros
                                       </button>
                                     </span>
                                     <span className="inline-flex rounded-md shadow-sm">
-                                      <button onClick={() => setShowFilter(false)} type="button" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                        Listo
+                                      <button type="button"
+                                              className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                        Buscar
                                       </button>
                                     </span>
                                 </div>
@@ -137,7 +258,7 @@ function UsersPage() {
             <Link href="/panel">
                 <a className="flex items-center text-sm px-4 text-gray-600 flex sm:px-6 lg:px-8 mt-2 sm:mt-4">
                     <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/>
                     </svg>
                     Panel
                 </a>
@@ -153,66 +274,65 @@ function UsersPage() {
                     </p>
 
                     <div className="mt-5 bg-white shadow overflow-hidden sm:rounded">
-                        <div className="block focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out p-4 pb-0">
+                        <div
+                            className="block focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out p-4 pb-2">
                             <div className="flex">
                                 <div className="min-w-0 flex-1 flex">
                                     <div className="w-full border flex border-r-0 rounded-l">
-                                        <label htmlFor="search" className="sr-only">Buscar</label>
+                                        <label htmlFor={search.name} className="sr-only">Buscar</label>
                                         <div className="relative text-gray-700 focus-within:text-gray-400 flex w-full">
-
-                                            <input id="search" className="block w-full pl-2 pr-2 py-1 border border-transparent leading-5 text-gray-700 placeholder-gray-700 focus:outline-none focus:bg-white focus:placeholder-gray-400 focus:text-gray-900 sm:text-sm transition duration-150 ease-in-out" placeholder="Buscar" type="search"/>
-                                        </div>
-                                    </div>
-                                    <div className="bg-green-200">
-                                        <div className="inline-block relative max-w-64">
-                                            <select className="text-gray-700 block appearance-none w-full bg-white border hover:border-gray-400 px-4 py-2 pr-8 leading-tight outline-none focus:outline-none">
-                                                <option>Really long option that will likely overlap the chevron</option>
-                                                <option>Option 2</option>
-                                                <option>Option 3</option>
-                                            </select>
-                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                                                </svg>
-                                            </div>
+                                            <input id={search.name}
+                                                   value={search.valueDefined}
+                                                   onChange={(e) => {
+                                                       return onChangeFilter(e, {
+                                                           type: 'text',
+                                                           data: search
+                                                       })
+                                                   }}
+                                                   className="block w-full pl-2 pr-2 py-1 border border-transparent leading-5 text-gray-700 placeholder-gray-700 focus:outline-none focus:bg-white focus:placeholder-gray-400 focus:text-gray-900 sm:text-sm transition duration-150 ease-in-out"
+                                                   placeholder={search.attr.placeholder} type={search.attr.type} autoComplete={search.attr.autoComplete ? 'on': 'off'}/>
                                         </div>
                                     </div>
                                     <div>
                                         <button onClick={() => setShowFilter(true)}
-                                            type="button" className="truncate inline-flex justify-center py-2 px-4 border border-r-0 border-l-0 text-sm leading-5 font-medium text-gray-700 bg-indigo-white hover:bg-gray-100 focus:outline-none  transition duration-150 ease-in-out">
+                                                type="button"
+                                                className="truncate inline-flex justify-center py-2 px-4 border border-r-0 text-sm leading-5 font-medium text-gray-700 bg-indigo-white hover:bg-gray-100 focus:outline-none  transition duration-150 ease-in-out">
                                             Filtros
                                         </button>
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="submit" className="rounded-r inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                    <button type="submit"
+                                            className="rounded-r inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                                         <svg className="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
+                                            <path fillRule="evenodd"
+                                                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                  clipRule="evenodd"/>
                                         </svg>
                                         Buscar
                                     </button>
                                 </div>
                             </div>
                         </div>
-
-                        <div className="px-4 pt-4 overflow-x-auto pb-4">
-                            <div className="inline-flex flex justify-between items-baseline rounded-md text-sm font-medium leading-5 bg-gray-200 text-gray-600 mr-2">
-                                <span className="p-1 border-r ">Filtro</span>
-                                <svg className="flex-shrink-0 self-center h-4 w-4 text-gray-600 cursor-pointer hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="px-4 overflow-x-auto">
+                            {filters.filter(filter => filter.isUsed).map((filter) => <div key={filter.name} className="inline-flex flex justify-between items-baseline rounded-md text-sm font-medium leading-5 bg-gray-200 text-gray-600 mr-2 my-1">
+                                <span className="p-1 border-r text-xs font-medium">{filter.shortTitle}: <span className="text-xs italic">{filter.valueDefined}</span></span>
+                                <svg className="flex-shrink-0 self-center h-4 w-4 text-gray-600 cursor-pointer hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => removeFilter(filter)}>
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
-                            </div>
+                            </div>)}
                         </div>
 
                         {loading && <LoadingList/>}
 
                         {!loading &&
                         <Fragment>
-                            <ul>
-                                {data.map((item, key) => <UserList item={item} key={key} />)}
+                            <ul className="mt-2">
+                                {data.map((item, key) => <UserList item={item} key={key}/>)}
                             </ul>
 
-                            <Pagination info={info} totalItem={data.length} handleNextPage={handleNextPage} handlePreviousPage={handlePreviousPage}/>
+                            <Pagination info={info} totalItem={data.length} handleNextPage={handleNextPage}
+                                        handlePreviousPage={handlePreviousPage}/>
                         </Fragment>
                         }
                     </div>
