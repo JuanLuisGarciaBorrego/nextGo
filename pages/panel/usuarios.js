@@ -10,7 +10,7 @@ import {buildInfoPaginationObject} from "../../src/utils";
 import Pagination from "../../src/components/List/Pagination";
 import LoadingList from "../../src/components/List/LoadingList";
 import RowFilter from "../../src/components/Filter/RowFilter";
-import {changeFilter, removeFilter} from "../../src/manager/filter";
+import {changeFilter, removeFilter, searchFilter} from "../../src/manager/filter";
 
 const allFilters = [
     {
@@ -23,6 +23,7 @@ const allFilters = [
         isUsed: false,
         labelDefined: '',
         valueDefined: '',
+        value: '',
         attr: {
             type: 'search',
             placeholder: 'Escribe el nombre a buscar',
@@ -35,7 +36,7 @@ const allFilters = [
         description: 'Filtrar por usuarios bloqueados o activos',
         shortTitle: 'Usuario',
         type: 'radio',
-        name: 'status',
+        name: 'active',
         group: [
             {id: 'status_block', label: 'Bloqueado', value: false, checked: false},
             {id: 'status_unblock', label: 'Activo', value: true, checked: false}
@@ -66,14 +67,15 @@ function UsersPage() {
 
     //filters
     const [filters, setFilters] = useState(allFilters)
-    const [showFilter, setShowFilter] = useState(true);
+    const [showFilter, setShowFilter] = useState(false);
 
     const onChangeFilter = async (e, content) => {
         const update = changeFilter(e, content, filters);
         setFilters(update);
     }
     const onRemoveFilter = async(filter) => {
-        const update = removeFilter(filter, filters)
+        const update = await removeFilter(filter, filters)
+
         setFilters(update);
     }
     const removeAllFilter = () => {
@@ -81,6 +83,21 @@ function UsersPage() {
     }
 
     const search = filters.find(item => item.main);
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+
+        const parameters = searchFilter(filters);
+        if(parameters.hasOwnProperty('active')) {
+            parameters['active'] = parameters['active'] === 'Activo'
+        }
+
+        setLoading(true);
+        const response = await API.user.list(token, 1, parameters);
+        setData(response.data.collection.data);
+        setInfo(buildInfoPaginationObject(response.data.collection.pagination));
+        setLoading(false);
+    }
 
     //pagination
     const handlePagination = async (type) => {
@@ -122,9 +139,7 @@ function UsersPage() {
                     >
                         <></>
                     </Transition.Child>
-                    {/*<div className="absolute inset-0 overflow-hidden bg-blue-200">*/}
 
-                    {/*</div>*/}
                     <section className="absolute inset-y-0 max-w-full right-0 flex">
                         <Transition.Child
                             show={showFilter.toString()}
@@ -168,7 +183,7 @@ function UsersPage() {
                                       </button>
                                     </span>
                                     <span className="inline-flex rounded-md shadow-sm">
-                                      <button type="button"
+                                      <button type="button" onClick={handleSubmit}
                                               className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                                         Buscar
                                       </button>
@@ -202,7 +217,7 @@ function UsersPage() {
                     <div className="mt-5 bg-white shadow overflow-hidden sm:rounded">
                         <div
                             className="block focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out p-4 pb-2">
-                            <div className="flex">
+                            <form className="flex" method="POST" onSubmit={handleSubmit}>
                                 <div className="min-w-0 flex-1 flex">
                                     <div className="w-full border flex border-r-0 rounded-l">
                                         <label htmlFor={search.name} className="sr-only">Buscar</label>
@@ -238,12 +253,12 @@ function UsersPage() {
                                         Buscar
                                     </button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                         <div className="px-4 overflow-x-auto">
                             {filters.filter(filter => filter.isUsed).map((filter) => <div key={filter.name} className="inline-flex flex justify-between items-baseline rounded-md text-sm font-medium leading-5 bg-gray-200 text-gray-600 mr-2 my-1">
                                 <span className="p-1 border-r text-xs font-medium">{filter.shortTitle}: <span className="text-xs italic">{filter.valueDefined}</span></span>
-                                <svg className="flex-shrink-0 self-center h-4 w-4 text-gray-600 cursor-pointer hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => removeFilter(filter)}>
+                                <svg className="flex-shrink-0 self-center h-4 w-4 text-gray-600 cursor-pointer hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => onRemoveFilter(filter)}>
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </div>)}

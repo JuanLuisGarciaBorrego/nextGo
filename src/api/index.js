@@ -69,6 +69,7 @@ const API = {
                 'lastName': lastName
             };
 
+
             configAxios.defaults.headers.Authorization = `Bearer ${token}`
 
             return await configAxios.put(`/users`, body);
@@ -83,15 +84,10 @@ const API = {
 
             return await configAxios.put(`/users/change-password`, body);
         },
-        async list(token, page = 1, parameters = {}) {
+        async list(token, page = 1, parameters = []) {
             configAxios.defaults.headers.Authorization = `Bearer ${token}`
-
-            let params = {
-                page: page ? page : 1,
-                ...parameters
-            };
-
-            const query = queryString.stringify(params);
+            parameters['page'] =  page ? page : 1;
+            const query = queryString.stringify(parameters);
             return await configAxios.get(`/users?${query}`);
         },
     }

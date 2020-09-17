@@ -3,16 +3,16 @@ export const changeFilter = (e, content, filters) => {
     let updateGroup = [];
     let updateFilter = null;
 
-    if(content.type === 'radio') {
+    if (content.type === 'radio') {
         let filterChange = null;
         updateGroup = content.data.group.map((item) => {
-            if(content.subData.id === item.id) {
+            if (content.subData.id === item.id) {
                 filterChange = {labelDefined: item.label, valueDefined: item.label};
                 return {
                     ...item,
                     checked: true
                 }
-            } else{
+            } else {
                 return {
                     ...item,
                     checked: false
@@ -22,17 +22,17 @@ export const changeFilter = (e, content, filters) => {
 
         updateFilter = {
             ...content.data,
-            group : updateGroup,
+            group: updateGroup,
             isUsed: true,
             labelDefined: filterChange?.labelDefined,
             valueDefined: filterChange?.valueDefined
         };
     }
 
-    if(content.type === 'text') {
+    if (content.type === 'text') {
         updateFilter = {
             ...content.data,
-            group : [updateGroup],
+            group: [updateGroup],
             isUsed: e.target.value !== '',
             labelDefined: content.data.shortTitle,
             valueDefined: e.target.value
@@ -51,7 +51,7 @@ export const changeFilter = (e, content, filters) => {
 export const removeFilter = (filter, filters) => {
     let updateFilter = [];
 
-    if(filter.type === 'radio') {
+    if (filter.type === 'radio') {
         const updateGroup = filter.group.map(item => {
             return {
                 ...item,
@@ -66,7 +66,7 @@ export const removeFilter = (filter, filters) => {
         }
     }
 
-    if(filter.type === 'text') {
+    if (filter.type === 'text') {
         updateFilter = {
             ...filter,
             labelDefined: '',
@@ -76,12 +76,24 @@ export const removeFilter = (filter, filters) => {
     }
 
     return filters.map(item => {
-        if(item.name === filter.name) {
+        if (item.name === filter.name) {
             return updateFilter
-        }else{
+        } else {
             return item;
         }
     })
 }
 
-export default {changeFilter, removeFilter};
+export const searchFilter = (filters) => {
+    const parameters = [];
+
+    filters.map(item => {
+        if (item.isUsed) {
+            parameters[item.name] = item.valueDefined
+        }
+    })
+
+    return parameters;
+}
+
+export default {changeFilter, removeFilter, searchFilter};

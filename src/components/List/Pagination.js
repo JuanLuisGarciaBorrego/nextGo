@@ -1,6 +1,15 @@
 import React, {Fragment} from 'react';
 
 function Pagination({info, totalItem, handlePreviousPage, handleNextPage}) {
+    if(totalItem === 0) {
+        return (
+            <nav className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <p className="text-sm leading-5 text-gray-700">
+                    Sin resultados
+                </p>
+            </nav>
+        )
+    }
 
     return (
         <Fragment>
