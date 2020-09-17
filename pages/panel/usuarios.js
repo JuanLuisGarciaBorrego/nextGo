@@ -10,6 +10,7 @@ import {buildInfoPaginationObject} from "../../src/utils";
 import Pagination from "../../src/components/List/Pagination";
 import LoadingList from "../../src/components/List/LoadingList";
 import RowFilter from "../../src/components/Filter/RowFilter";
+import {changeFilter, removeFilter} from "../../src/manager/filter";
 
 const allFilters = [
     {
@@ -68,91 +69,18 @@ function UsersPage() {
     const [showFilter, setShowFilter] = useState(true);
 
     const onChangeFilter = async (e, content) => {
-        //update filter
-        let filterChange = null;
-        let updateGroup = [];
-
-        if(content.type === 'radio') {
-            updateGroup = content.data.group.map((item) => {
-                if(content.subData.id === item.id) {
-                    filterChange = {labelDefined: item.label, valueDefined: item.label};
-                    return {
-                        ...item,
-                        checked: true
-                    }
-                } else{
-                    return {
-                        ...item,
-                        checked: false
-                    }
-                }
-            })
-        }
-
-        if(content.type === 'text') {
-            filterChange = {labelDefined: content.data.shortTitle, valueDefined: e.target.value};
-        }
-
-        const updateFilter = {
-            ...content.data,
-            group : updateGroup,
-            isUsed: true,
-            labelDefined: filterChange.labelDefined,
-            valueDefined: filterChange.valueDefined
-        };
-
-        const update = filters.map(item => {
-            if (item.name === content.data.name) {
-                return updateFilter;
-            } else {
-                return item;
-            }
-        })
-
+        const update = changeFilter(e, content, filters);
         setFilters(update);
     }
-
-    const removeFilter = async(filter) => {
-        let updateFilter = [];
-
-        if(filter.type === 'radio') {
-            const updateGroup = filter.group.map(item => {
-                return {
-                    ...item,
-                    checked: false,
-                }
-            })
-
-            updateFilter = {
-                ...filter,
-                group: updateGroup,
-                isUsed: false
-            }
-        }
-
-        if(filter.type === 'text') {
-            updateFilter = {
-                ...filter,
-                labelDefined: '',
-                valueDefined: '',
-                isUsed: false
-            }
-        }
-
-        const updateFilters = filters.map(item => {
-            if(item.name === filter.name) {
-                return updateFilter
-            }else{
-                return item;
-            }
-        })
-
-        setFilters(updateFilters);
+    const onRemoveFilter = async(filter) => {
+        const update = removeFilter(filter, filters)
+        setFilters(update);
     }
-
     const removeAllFilter = () => {
         setFilters(allFilters);
     }
+
+    const search = filters.find(item => item.main);
 
     //pagination
     const handlePagination = async (type) => {
@@ -176,8 +104,6 @@ function UsersPage() {
         e.preventDefault();
         await handlePagination('previous')
     }
-
-    const search = filters.find(item => item.main);
 
     return (
         <LayoutBase>
@@ -230,7 +156,7 @@ function UsersPage() {
                                         </div>
                                     </header>
                                     <div className="flex-1 flex flex-col justify-between">
-                                        {filters.map((item, key) => <RowFilter key={key} data={item} filters={filters} onChangeFilter={onChangeFilter} removeFilter={removeFilter}/>)}
+                                        {filters.map((item, key) => <RowFilter key={key} data={item} filters={filters} onChangeFilter={onChangeFilter} removeFilter={onRemoveFilter}/>)}
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-4 py-4 space-x-4 flex justify-between">
