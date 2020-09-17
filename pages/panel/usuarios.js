@@ -15,7 +15,7 @@ import {changeFilter, removeFilter, searchFilter} from "../../src/manager/filter
 const allFilters = [
     {
         title: 'Buscador',
-        description: 'Buscar por nombre',
+        description: 'Buscar por nombre y/o apellidos',
         shortTitle: 'Búsqueda',
         type: 'text',
         name: 'query',
@@ -30,6 +30,24 @@ const allFilters = [
             autoComplete: false
         },
         main: true
+    },
+    {
+        title: 'Buscador por emails',
+        description: 'Buscar por email ',
+        shortTitle: 'Email',
+        type: 'text',
+        name: 'email',
+        group: [],
+        isUsed: false,
+        labelDefined: '',
+        valueDefined: '',
+        value: '',
+        attr: {
+            type: 'search',
+            placeholder: 'Escribe elemail a buscar',
+            autoComplete: false
+        },
+        main: false
     },
     {
         title: '¿Usuario bloqueado?',
@@ -171,7 +189,7 @@ function UsersPage() {
                                         </div>
                                     </header>
                                     <div className="flex-1 flex flex-col justify-between">
-                                        {filters.map((item, key) => <RowFilter key={key} data={item} filters={filters} onChangeFilter={onChangeFilter} removeFilter={onRemoveFilter}/>)}
+                                        {filters.map((item, key) => <RowFilter key={key} data={item} filters={filters} onChangeFilter={onChangeFilter} removeFilter={onRemoveFilter} expand={false}/>)}
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-4 py-4 space-x-4 flex justify-between">
@@ -272,8 +290,7 @@ function UsersPage() {
                                 {data.map((item, key) => <UserList item={item} key={key}/>)}
                             </ul>
 
-                            <Pagination info={info} totalItem={data.length} handleNextPage={handleNextPage}
-                                        handlePreviousPage={handlePreviousPage}/>
+                            <Pagination info={info} totalItem={data.length} handleNextPage={handleNextPage} handlePreviousPage={handlePreviousPage}/>
                         </Fragment>
                         }
                     </div>
