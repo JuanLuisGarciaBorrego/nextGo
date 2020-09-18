@@ -7,7 +7,6 @@ import {useAuthenticated} from "../../../src/context/AuthContext";
 import {useFlashMessages} from "../../../src/context/FlashMessagesContext";
 import {FLASH_MESSAGE_ERROR, FLASH_MESSAGE_SUCCESS} from "../../../src/constants/flashMessages";
 import {Formik} from "formik";
-import Router from "next/router";
 import UserForm from "../../../src/components/Form/UserForm";
 import LoadingForm from "../../../src/components/Form/LoadingForm";
 import { useRouter } from 'next/router'
@@ -28,6 +27,7 @@ function EditUserPage() {
             const result = response.data.data;
 
             setData({
+                uuid: result.uuid,
                 email: result.email,
                 name: result.name,
                 lastName: result.lastName,
@@ -47,10 +47,9 @@ function EditUserPage() {
         return new Promise(async () => {
             setSubmitting(true);
             try {
-                const response = await API.user.add(token, values.email, values.name, values.lastName, values.password, values.role, values.isActive, values.sendEmail);
+                await API.user.edit(token, values.uuid, values.email, values.name, values.lastName, values.password, values.role, values.isActive, values.sendEmail);
                 addFlashMessage(FLASH_MESSAGE_SUCCESS, 'Datos guardados', 'Usuario creado', false);
 
-                return Router.push(response.data.data.uuid);
             } catch (e) {
                 if (e.response.status === 400) {
                     const constraints = e.response.data.data.constraints;

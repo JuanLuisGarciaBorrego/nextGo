@@ -3,10 +3,8 @@ import {Field, Form} from "formik";
 import ErrorFieldForm from "./ErrorFieldForm";
 import {ROLES} from "../../constants/roles";
 import SaveOrCancelButtons from "./SaveOrCancelButtons";
-import {useAuthenticated} from "../../context/AuthContext";
 
 export default function UserForm({isSubmitting, handleChange, handleSubmit, values, errors, isEdit = false}) {
-    const {role} = useAuthenticated();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -36,7 +34,7 @@ export default function UserForm({isSubmitting, handleChange, handleSubmit, valu
                                 </div>
 
                                 <div className="col-span-4">
-                                    <label htmlFor="last_name" className="block text-sm font-medium leading-5 text-gray-700">
+                                    <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
                                         Apellidos
                                     </label>
                                     <div className="mt-1 rounded-md shadow-sm">
@@ -75,8 +73,7 @@ export default function UserForm({isSubmitting, handleChange, handleSubmit, valu
                                             })}
                                         </Field>
                                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                            <svg className="fill-current h-4 w-4"
-                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <svg className="fill-current h-4 w-4" viewBox="0 0 20 20">
                                                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                                             </svg>
                                         </div>
@@ -92,7 +89,7 @@ export default function UserForm({isSubmitting, handleChange, handleSubmit, valu
                                     <div className="mt-1 rounded-md shadow-sm leading-normal relative">
                                         <Field name="password"
                                                type={`${showPassword ? 'text' : 'password'}`}
-                                               required
+                                               required={!isEdit}
                                                className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
                                                autoComplete="off"/>
                                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"  onClick={handleShowPassword}>
