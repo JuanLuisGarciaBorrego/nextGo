@@ -222,14 +222,13 @@ function LayoutBase({children}) {
                     </div>
 
 
-                    <main className="flex-1 relative overflow-y-auto focus:outline-none bg-gray-100" tabIndex="0">
+                    <main className="flex-1 relative overflow-y-auto focus:outline-none bg-gray-100 pb-4" tabIndex="0">
                         {children}
                         <div className="fixed inset-0 flex items-end justify-center pointer-events-none pt-20 pr-4 lg:pt-4 sm:items-start sm:justify-end pb-16">
                             <div className="flex flex-col w-full items-center sm:items-end">
                                 {messages.map((item) => <FlashMessage key={item.uuid} msg={item}/>)}
                             </div>
                         </div>
-
                     </main>
                 </div>
             </div>

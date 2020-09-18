@@ -90,6 +90,25 @@ const API = {
             const query = queryString.stringify(parameters);
             return await configAxios.get(`/users?${query}`);
         },
+        async add(token, email, name, lastName, password, role, isActive, sendEmail) {
+            let body = {
+                'email': email,
+                'name': name,
+                'lastName': lastName,
+                'password': password,
+                'role': role,
+                'isActive': sendEmail
+            };
+
+            configAxios.defaults.headers.Authorization = `Bearer ${token}`
+
+            return await configAxios.post(`/users`, body);
+        },
+        async show(token, uuid) {
+            configAxios.defaults.headers.Authorization = `Bearer ${token}`
+
+            return await configAxios.get(`/users/${uuid}`);
+        }
     }
 }
 export default API;

@@ -73,47 +73,47 @@ function ChangePasswordProfile({fixedButton = true}) {
                                             Asegurese que su información sea correcta.
                                         </p>
                                     </div>
-
-                                    <div className="mt-6 grid grid-cols-6 gap-y-4 gap-x-4">
-                                        <div className="col-span-4">
-                                            <label htmlFor="oldPassword" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Contraseña actual
-                                            </label>
-                                            <div className="mt-1 rounded-md shadow-sm leading-normal">
-                                                <InputPassword
-                                                    name="oldPassword"
-                                                    required
-                                                    onChange={handleChange}
-                                                    cssInput='p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none'
-                                                />
+                                    <div className="mt-6 bg-white shadow sm:rounded p-4">
+                                        <div className="grid grid-cols-6 gap-y-4 gap-x-4">
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="oldPassword" className="block text-sm font-medium leading-5 text-gray-700">
+                                                    Contraseña actual
+                                                </label>
+                                                <div className="mt-1 rounded-md shadow-sm leading-normal">
+                                                    <InputPassword
+                                                        name="oldPassword"
+                                                        required
+                                                        onChange={handleChange}
+                                                        cssInput='p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none'
+                                                    />
+                                                </div>
+                                                <ErrorFieldForm error={errors.oldPassword}/>
                                             </div>
-                                            <ErrorFieldForm error={errors.oldPassword}/>
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="newPassword" className="block text-sm font-medium leading-5 text-gray-700">
+                                                    Nueva contraseña
+                                                </label>
+                                                <div className="mt-1 rounded-md shadow-sm">
+                                                    <InputPassword
+                                                        name="newPassword"
+                                                        required
+                                                        onChange={handleChange}
+                                                        cssInput='p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none'
+                                                    />
+                                                </div>
+                                                <ErrorFieldForm error={errors.newPassword}/>
+                                            </div>
                                         </div>
 
-
-                                        <div className="col-span-4">
-                                            <label htmlFor="newPassword" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Nueva contraseña
-                                            </label>
-                                            <div className="mt-1 rounded-md shadow-sm">
-                                                <InputPassword
-                                                    name="newPassword"
-                                                    required
-                                                    onChange={handleChange}
-                                                    cssInput='p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none'
-                                                />
-                                            </div>
-                                            <ErrorFieldForm error={errors.newPassword}/>
-                                        </div>
+                                        <SaveOrCancelButtons
+                                            isSubmitting={isSubmitting}
+                                            showCancel={false}
+                                            fixedButton={fixedButton}
+                                        />
                                     </div>
+
                                 </div>
                             </div>
-
-                            <SaveOrCancelButtons
-                                isSubmitting={isSubmitting}
-                                showCancel={false}
-                                fixedButton={fixedButton}
-                            />
                         </Form>
                     )
                 }}

@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment} from 'react';
 import {Formik, Form, Field} from 'formik';
 import {useAuthenticated} from "../context/AuthContext";
 import {useFlashMessages} from "../context/FlashMessagesContext";
@@ -28,7 +28,6 @@ function EditProfile({fixedButton = true}) {
                 await API.user.editCurrentUser(token, values.email, values.name, values.lastName);
                 addFlashMessage(FLASH_MESSAGE_SUCCESS, 'Cambios guardados', 'Información de su perfil modificada.', false);
             } catch (e) {
-                console.log(e);
                 if (e.response.status === 400) {
                     const constraints = e.response.data.data.constraints;
                     const constraintsList = Object.entries(constraints);
@@ -77,60 +76,60 @@ function EditProfile({fixedButton = true}) {
                                         </p>
                                     </div>
 
-                                    <div className="mt-6 grid grid-cols-6 gap-y-4 gap-x-4">
-                                        <div className="col-span-2">
-                                            <label htmlFor="first_name"
-                                                   className="block text-sm font-medium leading-5 text-gray-700">
-                                                Nombre
-                                            </label>
-                                            <div className="mt-1 rounded-md shadow-sm leading-normal">
-                                                <Field aria-label="name" name="name" type="text"
-                                                       required
-                                                       className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
-                                                       autoComplete="off"
-                                                       placeholder="Nombre"/>
+                                    <div className="mt-6 bg-white shadow sm:rounded p-4">
+                                        <div className="grid grid-cols-6 gap-y-4 gap-x-4">
+                                            <div className="col-span-2">
+                                                <label htmlFor="first_name"
+                                                       className="block text-sm font-medium leading-5 text-gray-700">
+                                                    Nombre
+                                                </label>
+                                                <div className="mt-1 rounded-md shadow-sm leading-normal">
+                                                    <Field aria-label="name" name="name" type="text"
+                                                           required
+                                                           className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
+                                                           autoComplete="off"
+                                                           placeholder="Nombre"/>
+                                                </div>
+                                                <ErrorFieldForm error={errors.name}/>
                                             </div>
-                                            <ErrorFieldForm error={errors.name}/>
+                                            <div className="col-span-4">
+                                                <label htmlFor="last_name"
+                                                       className="block text-sm font-medium leading-5 text-gray-700">
+                                                    Apellidos
+                                                </label>
+                                                <div className="mt-1 rounded-md shadow-sm">
+                                                    <Field aria-label="lastName" name="lastName" type="text"
+                                                           required
+                                                           className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
+                                                           autoComplete="off"
+                                                           placeholder="Apellidos"/>
+                                                </div>
+                                                <ErrorFieldForm error={errors.lastName}/>
+                                            </div>
+                                            <div className="col-span-4">
+                                                <label htmlFor="email"
+                                                       className="block text-sm font-medium leading-5 text-gray-700">
+                                                    Email
+                                                </label>
+                                                <div className="mt-1 rounded-md shadow-sm">
+                                                    <Field aria-label="email" name="email" type="email"
+                                                           required
+                                                           className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
+                                                           autoComplete="off"
+                                                           placeholder="Email"/>
+                                                </div>
+                                                <ErrorFieldForm error={errors.email}/>
+                                            </div>
                                         </div>
 
-                                        <div className="col-span-4">
-                                            <label htmlFor="last_name"
-                                                   className="block text-sm font-medium leading-5 text-gray-700">
-                                                Apellidos
-                                            </label>
-                                            <div className="mt-1 rounded-md shadow-sm">
-                                                <Field aria-label="lastName" name="lastName" type="text"
-                                                       required
-                                                       className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
-                                                       autoComplete="off"
-                                                       placeholder="Apellidos"/>
-                                            </div>
-                                            <ErrorFieldForm error={errors.lastName}/>
-                                        </div>
-
-                                        <div className="col-span-4">
-                                            <label htmlFor="email"
-                                                   className="block text-sm font-medium leading-5 text-gray-700">
-                                                Email
-                                            </label>
-                                            <div className="mt-1 rounded-md shadow-sm">
-                                                <Field aria-label="email" name="email" type="email"
-                                                       required
-                                                       className="p-2 border-solid border border-gray-400 form-input rounded-md block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none"
-                                                       autoComplete="off"
-                                                       placeholder="Email"/>
-                                            </div>
-                                            <ErrorFieldForm error={errors.email}/>
-                                        </div>
+                                        <SaveOrCancelButtons
+                                            isSubmitting={isSubmitting}
+                                            showCancel={false}
+                                            fixedButton={fixedButton}
+                                        />
                                     </div>
                                 </div>
                             </div>
-
-                            <SaveOrCancelButtons
-                                isSubmitting={isSubmitting}
-                                showCancel={false}
-                                fixedButton={fixedButton}
-                            />
                         </Form>
                     )
                 }}
