@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import {useAuthenticated} from "../../context/AuthContext";
+import LoadingPage from "../../components/LoadingPage";
 
 function DefaultLoadingFallback() {
-    return <p>Loading...</p>;
+    return <LoadingPage />;
 }
 
 /**

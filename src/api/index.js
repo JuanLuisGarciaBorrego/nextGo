@@ -1,6 +1,8 @@
 import axios from "axios";
 import {isServerRequest} from "../utils";
 import * as queryString from "querystring";
+import Router from 'next/router';
+import {ROUTE_LOGIN, ROUTE_LOGIN_REDIRECT_SUCCESS} from "../constants/routes";
 
 const BASE_URL = isServerRequest ? process.env.API_BASE_URL : process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -132,7 +134,9 @@ export default API;
 configAxios.interceptors.response.use(function (config) {
     return config;
 }, function (error) {
-
+    if(error.response.status === 401) {
+        window.location.reload();
+    }
     return Promise.reject(error);
 });
 
