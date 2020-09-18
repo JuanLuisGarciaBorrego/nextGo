@@ -177,12 +177,9 @@ function UsersPage() {
                                                 Filtros
                                             </h2>
                                             <div className="h-7 flex items-center">
-                                                <button aria-label="Close panel" onClick={() => setShowFilter(false)}
-                                                        className="text-gray-600 hover:text-white transition ease-in-out duration-150">
-                                                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                                         stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round"
-                                                              strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                                                <button aria-label="Close panel" onClick={() => setShowFilter(false)} className="text-gray-600 hover:text-white transition ease-in-out duration-150">
+                                                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
                                                     </svg>
                                                 </button>
                                             </div>
@@ -194,15 +191,12 @@ function UsersPage() {
                                 </div>
                                 <div className="flex-shrink-0 px-4 py-4 space-x-4 flex justify-between">
                                     <span className="inline-flex rounded-md shadow-sm">
-                                      <button type="button"
-                                              onClick={removeAllFilter}
-                                              className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                                      <button type="button" onClick={removeAllFilter} className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                                         Borrar filtros
                                       </button>
                                     </span>
                                     <span className="inline-flex rounded-md shadow-sm">
-                                      <button type="button" onClick={handleSubmit}
-                                              className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                      <button type="button" onClick={handleSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                                         Buscar
                                       </button>
                                     </span>
@@ -233,8 +227,7 @@ function UsersPage() {
                     </p>
 
                     <div className="mt-5 bg-white shadow overflow-hidden sm:rounded">
-                        <div
-                            className="block focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out p-4 pb-2">
+                        <div className="block focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out p-4 pb-2">
                             <form className="flex" method="POST" onSubmit={handleSubmit}>
                                 <div className="min-w-0 flex-1 flex">
                                     <div className="w-full border flex border-r-0 rounded-l">
@@ -261,12 +254,9 @@ function UsersPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="submit"
-                                            className="rounded-r inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                    <button type="submit" className="rounded-r inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                                         <svg className="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd"
-                                                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                  clipRule="evenodd"/>
+                                            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
                                         </svg>
                                         Buscar
                                     </button>
