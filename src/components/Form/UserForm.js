@@ -19,18 +19,30 @@ export default function UserForm({isSubmitting, handleChange, handleSubmit, valu
     const [file, setFile] = useState(null);
 
     const handleUpload = (e) => {
-        const file = e.target.files[0];
-        if(!file) {
+        const fileUpload = e.target.files[0];
+        if(!fileUpload) {
             return
         }
-        if(file.type.indexOf('image') !== 0) {
+        if(fileUpload.type.indexOf('image') !== 0) {
             addFlashMessage(FLASH_MESSAGE_ERROR, 'Oops', 'El archivo subido no es una imagen', false);
         }
-        if(bytesToMb(file.size) > 7.0) {
+        if(bytesToMb(fileUpload.size) > 7.0) {
             addFlashMessage(FLASH_MESSAGE_ERROR, 'Oops', 'Imagen demasiado pesada, máximo 7MB', false);
         }
+
+        let reader = new FileReader();
+        reader.readAsDataURL(fileUpload);
+        reader.onloadstart = () => {
+            setUpload(true)
+            console.log('empieza a convertir')
+        }
+        reader.onloadend = () => {
+            console.log('acaba de convertir')
+            setUpload(false);
+            setFile(reader.result);
+        };
     }
-    // console.log(acceptedFiles);
+
     return (
         <Fragment>
             <Form className="w-full max-w-screen-md" method="POST">
@@ -169,11 +181,13 @@ export default function UserForm({isSubmitting, handleChange, handleSubmit, valu
                                     </label>
                                     <div className="mt-2 flex items-center">
                                         {file &&
-                                        <div className="animate-pulse border-dashed flex items-center justify-center" key={file.name}>
-                                            <img className="inline-block h-12 w-12 rounded-full z-0" src={file.preview} />
-                                            <svg className="center center h-4 w-4 z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <div className={`${upload && 'animate-pulse'} relative border-dashed flex items-center justify-center h-12 w-12`}>
+                                            <img className="absolute h-12 w-12 rounded-full z-0 bg-gray-100" src={file} />
+                                            {upload &&
+                                            <svg className={`absolute h-4 w-4 z-10 animate-spin`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                             </svg>
+                                            }
                                         </div>
                                         }
 
@@ -201,6 +215,7 @@ export default function UserForm({isSubmitting, handleChange, handleSubmit, valu
                                             {!upload &&
                                             <input type='file' name="file" className="hidden" onChange={handleUpload}/>
                                             }
+                                            {!upload &&
                                             <div className="flex-1 px-6 pt-8 pb-6 text-center">
                                                 <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -212,6 +227,21 @@ export default function UserForm({isSubmitting, handleChange, handleSubmit, valu
                                                     Formatos PNG, JPG, GIF con un máximo de 7MB
                                                 </p>
                                             </div>
+                                            }
+
+                                            {upload &&
+                                            <div className="flex-1 px-6 pt-8 pb-6 text-center">
+                                                <svg className="mx-auto h-12 w-12 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                                <p className="mt-1 text-sm text-gray-600">
+                                                    <span className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition duration-150 ease-in-out">Subiendo archivo</span>
+                                                </p>
+                                                <p className="mt-1 text-xs text-gray-500">
+                                                    Puede durar unos segundos
+                                                </p>
+                                            </div>
+                                            }
                                         </label>
                                     </div>
                                 </div>
