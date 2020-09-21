@@ -34,7 +34,8 @@ function EditUserPage() {
                 role: whatRoleAmI(result.roles),
                 password: '',
                 isActive: result.active,
-                sendEmail: false
+                sendEmail: false,
+                avatar: result.avatar
             })
 
             setLoading(false);
@@ -46,6 +47,7 @@ function EditUserPage() {
     const handleSubmit = async (values, {setSubmitting, setFieldError}) => {
         return new Promise(async () => {
             setSubmitting(true);
+
             try {
                 await API.user.edit(token, values.uuid, values.email, values.name, values.lastName, values.password, values.role, values.isActive, values.sendEmail);
                 addFlashMessage(FLASH_MESSAGE_SUCCESS, 'Datos guardados', 'Usuario creado', false);
@@ -103,10 +105,11 @@ function EditUserPage() {
                                   isSubmitting,
                                   handleChange,
                                   errors,
-                                  values
+                                  values,
+                                  setFieldValue
                               }) => {
                                 return (
-                                    <UserForm  isSubmitting={isSubmitting} handleChange={handleChange} handleSubmit={handleSubmit} values={values} errors={errors} isEdit={true}/>
+                                    <UserForm  isSubmitting={isSubmitting} handleChange={handleChange} handleSubmit={handleSubmit} values={values} errors={errors} setFieldValue={setFieldValue} isEdit={true}/>
                                 )
                             }}
                         </Formik>

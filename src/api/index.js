@@ -88,7 +88,7 @@ const API = {
         },
         async list(token, page = 1, parameters = []) {
             configAxios.defaults.headers.Authorization = `Bearer ${token}`
-            parameters['page'] =  page ? page : 1;
+            parameters['page'] = page ? page : 1;
             const query = queryString.stringify(parameters);
             return await configAxios.get(`/users?${query}`);
         },
@@ -122,11 +122,25 @@ const API = {
                 'isActive': isActive,
                 'sendEmail': sendEmail
             };
-
             configAxios.defaults.headers.Authorization = `Bearer ${token}`
 
             return await configAxios.put(`/users/${uuid}`, body);
-        }
+        },
+        async uploadAvatar(token, uuid, formData) {
+            const headers = {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + token
+            }
+
+            return await axios.post(`${BASE_URL}/users/${uuid}/avatar`, formData, {
+                headers: headers
+            });
+        },
+        async removeAvatar(token, uuid) {
+            configAxios.defaults.headers.Authorization = `Bearer ${token}`
+
+            return await configAxios.delete(`/users/${uuid}/avatar`);
+        },
     }
 }
 export default API;
@@ -134,7 +148,7 @@ export default API;
 configAxios.interceptors.response.use(function (config) {
     return config;
 }, function (error) {
-    if(error.response.status === 401) {
+    if (error.response.status === 401) {
         window.location.reload();
     }
     return Promise.reject(error);
