@@ -40,10 +40,8 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
         reader.onloadstart = () => {
             setUpload(true)
             setErrorUpload('');
-            console.log('empieza a convertir')
         }
         reader.onloadend = async () => {
-            console.log('acaba de convertir')
             // setFieldValue("avatar", reader.result);
 
             try {
@@ -217,7 +215,7 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                     <div className="mt-2 flex items-center">
                                         {file &&
                                         <div className={`${upload && 'animate-pulse'} relative border-dashed flex items-center justify-center h-12 w-12`}>
-                                            <img className="absolute h-12 w-12 rounded-full z-0 bg-gray-100" src={file} />
+                                            <img alt='avatar' className="absolute h-12 w-12 rounded-full z-0 bg-gray-100" src={file} />
                                             {upload &&
                                             <svg className={`absolute h-4 w-4 z-10 animate-spin`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -227,10 +225,17 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                         }
 
                                         {!file &&
-                                        <span className="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                          <svg className="h-full w-full text-indigo-300" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                          </svg>
+                                        <span className={`${upload && 'animate-pulse'} h-12 w-12 rounded-full relative flex items-center justify-center overflow-hidden bg-gray-100`}>
+                                            {upload &&
+                                            <svg className={`absolute h-4 w-4 z-10 animate-spin`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                            }
+                                            {!upload &&
+                                              <svg className="h-full w-full text-indigo-300" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                              </svg>
+                                            }
                                         </span>
                                         }
 
