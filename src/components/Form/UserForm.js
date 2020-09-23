@@ -26,47 +26,6 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
     const [img, setImg] = useState(null);
     const [errorUpload, setErrorUpload] = useState('');
 
-    const handleUpload = async (file) => {
-
-        console.log('handle upload', file);
-        // const fileUpload = e.target.files[0];
-        // if(!fileUpload) {
-        //     return
-        // }
-        // if(fileUpload.type.indexOf('image') !== 0) {
-        //     addFlashMessage(FLASH_MESSAGE_ERROR, 'Oops', 'El archivo subido no es una imagen', false);
-        // }
-        // if(bytesToMb(fileUpload.size) > 7.0) {
-        //     addFlashMessage(FLASH_MESSAGE_ERROR, 'Oops', 'Imagen demasiado pesada, máximo 7MB', false);
-        // }
-        //
-        // let reader = new FileReader();
-        // reader.readAsDataURL(fileUpload);
-        // reader.onloadstart = () => {
-        //     setUpload(true)
-        //     setErrorUpload('');
-        // }
-        // reader.onloadend = async () => {
-        //     // setFieldValue("avatar", reader.result);
-        //
-        //     try {
-        //         const formData = new FormData();
-        //         formData.append('file', fileUpload);
-        //         const response = await API.user.uploadAvatar(token, values.uuid, formData);
-        //         setFile(response.data.data.avatar);
-        //         addFlashMessage(FLASH_MESSAGE_SUCCESS, 'Foto subida', 'Foto perfil cambiada');
-        //     } catch (e) {
-        //         if(e.response.status === 400) {
-        //             setErrorUpload(e.response.data.data.constraints.file[0]);
-        //         }
-        //
-        //         addFlashMessage(FLASH_MESSAGE_ERROR, 'Oops', 'Ha ocurrido un error al subir la foto');
-        //     }
-        //
-        //     setUpload(false);
-        // };
-    }
-
     const handleRemove = async (e) => {
         setFieldValue("avatar", "");
         if (!file) {
@@ -82,25 +41,20 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
         }
     }
 
-
     const [crop, setCrop] = useState({x: 0, y: 0})
     const [zoom, setZoom] = useState(1.0);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-    const [croppedImage, setCroppedImage] = useState(null);
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels)
     }, [])
 
     const showCroppedImage = useCallback(async () => {
+        setUpload(true);
         const cropped = await getCroppedImg(
             img,
             croppedAreaPixels
         )
-
-        setCroppedImage(URL.createObjectURL(cropped))
-        // setFile(cropped);
-        console.log('blob',cropped);
         try {
             const newImage = new File([cropped], 'avatar.jpg');
             const formData = new FormData();
@@ -116,8 +70,8 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
             addFlashMessage(FLASH_MESSAGE_ERROR, 'Oops', 'Ha ocurrido un error al subir la foto');
         }
 
-        setCroppedImage(cropped)
         setOpen(false);
+        setUpload(false);
 
     }, [croppedAreaPixels])
 
@@ -125,7 +79,7 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
 
     const openModal = async (e) => {
         const fileUpload = e.target.files[0];
-        console.log('upload',fileUpload)
+
         if (!fileUpload) {
             return
         }
@@ -227,7 +181,7 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                     <ErrorFieldForm error={errors.lastName}/>
                                 </div>
 
-                                <div className="col-span-4">
+                                <div className="col-span-6 sm:col-span-4">
                                     <label htmlFor="email"
                                            className="block text-sm font-medium leading-5 text-gray-700">
                                         Email
@@ -242,7 +196,7 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                     <ErrorFieldForm error={errors.email}/>
                                 </div>
 
-                                <div className="col-span-3">
+                                <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="role"
                                            className="block text-sm font-medium leading-5 text-gray-700 whitespace-no-wrap">
                                         Tipo de usuario
@@ -266,7 +220,7 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                     <ErrorFieldForm error={errors.role}/>
                                 </div>
 
-                                <div className="col-span-3">
+                                <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="password"
                                            className="block text-sm font-medium leading-5 text-gray-700">
                                         Contraseña
@@ -303,7 +257,7 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                     <ErrorFieldForm error={errors.password}/>
                                 </div>
 
-                                <div className="col-span-3">
+                                <div className="col-span-6 sm:col-span-3">
                                     <div className="relative flex items-start">
                                         <div className="absolute flex items-center">
                                             <input id="isActive"
@@ -321,7 +275,7 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                     </div>
                                 </div>
 
-                                <div className="col-span-3">
+                                <div className="col-span-6 sm:col-span-3">
                                     <div className="relative flex items-start">
                                         <div className="absolute flex items-center">
                                             <input id="sendEmail"
@@ -405,49 +359,8 @@ export default function UserForm({isSubmitting, handleChange, setFieldValue, val
                                     </div>
                                     <ErrorFieldForm error={errorUpload}/>
                                 </div>
-
-                                {/*<div className="col-span-6">*/}
-                                {/*    <label htmlFor="file_upload" className="block text-sm leading-5 font-medium text-gray-700">*/}
-                                {/*        Cambiar avatar*/}
-                                {/*    </label>*/}
-                                {/*    <div className={`border-2 border-gray-300 border-dashed rounded-md flex-1 flex w-full mt-2 flex-col hover:bg-gray-100 transition duration-150 ease-in-out ${upload ? 'opacity-50 cursor-not-allowed spinner' : ' cursor-pointer'}`}>*/}
-                                {/*        <label className="flex w-full justify-center">*/}
-                                {/*            {!upload &&*/}
-                                {/*            <input type='file' name="file" className="hidden" onChange={handleUpload}/>*/}
-                                {/*            }*/}
-                                {/*            {!upload &&*/}
-                                {/*            <div className="flex-1 px-6 pt-8 pb-6 text-center">*/}
-                                {/*                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">*/}
-                                {/*                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>*/}
-                                {/*                </svg>*/}
-                                {/*                <p className="mt-1 text-sm text-gray-600">*/}
-                                {/*                    <span className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition duration-150 ease-in-out">Subir archivo</span>*/}
-                                {/*                </p>*/}
-                                {/*                <p className="mt-1 text-xs text-gray-500">*/}
-                                {/*                    Formatos PNG, JPG, GIF con un máximo de 7MB*/}
-                                {/*                </p>*/}
-                                {/*            </div>*/}
-                                {/*            }*/}
-
-                                {/*            {upload &&*/}
-                                {/*            <div className="flex-1 px-6 pt-8 pb-6 text-center">*/}
-                                {/*                <svg className="mx-auto h-12 w-12 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">*/}
-                                {/*                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />*/}
-                                {/*                </svg>*/}
-                                {/*                <p className="mt-1 text-sm text-gray-600">*/}
-                                {/*                    <span className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition duration-150 ease-in-out">Subiendo archivo</span>*/}
-                                {/*                </p>*/}
-                                {/*                <p className="mt-1 text-xs text-gray-500">*/}
-                                {/*                    Puede durar unos segundos*/}
-                                {/*                </p>*/}
-                                {/*            </div>*/}
-                                {/*            }*/}
-                                {/*        </label>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
                             </div>
-                            {/*<canvas ref={canvas} width={croppedAreaPixels.width} height={croppedAreaPixels.height}> </canvas>*/}
-                            <img src={croppedImage} alt="Cropped"/>
+
                             <SaveOrCancelButtons
                                 isSubmitting={isSubmitting}
                                 showCancel={true}
