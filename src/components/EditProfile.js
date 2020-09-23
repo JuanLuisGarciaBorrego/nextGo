@@ -82,7 +82,7 @@ function EditProfile({fixedButton = true}) {
                                             <div className="col-span-6">
                                                 <label htmlFor="photo"
                                                        className="block text-sm leading-5 font-medium text-gray-700">
-                                                    Avatar
+                                                    Foto perfil
                                                 </label>
                                                 <div className="mt-2 ">
                                                     <AvatarForm userUuid={user.uuid} avatar={user.avatar} currentUser={true}/>
