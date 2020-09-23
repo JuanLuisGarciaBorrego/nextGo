@@ -1,17 +1,9 @@
 import React from "react";
-import {useAuthenticated} from "../../src/context/AuthContext";
-import Nav from "../../src/components/Nav";
 import withAuth from "../../src/utils/wrapper/withAuth";
-import API from "../../src/api";
 import LayoutBase from "../../src/components/layout/LayoutBase";
 
 function PanelPage() {
 
-    const {isAuthenticated, token} = useAuthenticated();
-
-    const click = async() => {
-        const user = await API.user.currentUser(token);
-    }
     return (
         <LayoutBase>
             {/*Page title & actions */}
