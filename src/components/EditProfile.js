@@ -6,6 +6,7 @@ import {FLASH_MESSAGE_ERROR, FLASH_MESSAGE_SUCCESS} from "../constants/flashMess
 import SaveOrCancelButtons from "./Form/SaveOrCancelButtons";
 import API from "../api";
 import ErrorFieldForm from "./Form/ErrorFieldForm";
+import AvatarForm from "./Form/AvatarForm";
 
 function EditProfile({fixedButton = true}) {
     const {user, token} = useAuthenticated();
@@ -59,8 +60,7 @@ function EditProfile({fixedButton = true}) {
             >
                 {({
                       isSubmitting,
-                      handleChange,
-                      handleReset,
+                      values,
                       errors
                   }) => {
                     return (
@@ -78,6 +78,17 @@ function EditProfile({fixedButton = true}) {
 
                                     <div className="mt-6 bg-white shadow sm:rounded p-4">
                                         <div className="grid grid-cols-6 gap-y-4 gap-x-4">
+
+                                            <div className="col-span-6">
+                                                <label htmlFor="photo"
+                                                       className="block text-sm leading-5 font-medium text-gray-700">
+                                                    Avatar
+                                                </label>
+                                                <div className="mt-2 ">
+                                                    <AvatarForm userUuid={user.uuid} avatar={user.avatar} currentUser={true}/>
+                                                </div>
+                                            </div>
+
                                             <div className="col-span-2">
                                                 <label htmlFor="first_name"
                                                        className="block text-sm font-medium leading-5 text-gray-700">

@@ -104,6 +104,13 @@ const AuthContextProvider = ({children}) => {
         await setUser(data.data.user);
     }
 
+    async function changeAvatar(img) {
+        setUser({
+            ...user,
+            avatar: img
+        })
+    }
+
     return (
         <AuthContext.Provider value={{
             isLoading,
@@ -115,6 +122,7 @@ const AuthContextProvider = ({children}) => {
             user,
             handleLogout,
             setLogin,
+            changeAvatar
         }}>
             {children}
         </AuthContext.Provider>

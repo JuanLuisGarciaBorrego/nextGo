@@ -19,12 +19,16 @@ export default function DropdownMenuUser() {
                     type="button" className="group w-full rounded-md px-2 py-2 text-sm leading-5 font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-500 focus:outline-none focus:bg-gray-100 focus:border-blue-300 active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" aria-expanded="true">
                     <div className="flex w-full justify-between items-center">
                         <div className="flex items-center justify-between space-x-2">
-                            {/*<img className="ml-2 w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" alt=""/>*/}
-                            <span className="ml-2 inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                            {user?.avatar?
+                                <img className="ml-2 w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" src={user.avatar} alt="Avatar"/>
+                                :<span
+                                    className="ml-2 inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
                               <svg className="h-full w-full text-indigo-200" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                <path
+                                    d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
                               </svg>
                             </span>
+                            }
                             <div className="flex-1 pl-2">
                                 <h2 className="text-gray-900 text-sm leading-5 font-medium text-left">Mi cuenta</h2>
                                 <h3 className="text-indigo-600 text-sm leading-5 truncate text-left">{user?.name} {user?.lastName}</h3>
