@@ -5,7 +5,6 @@ import {throwErrorPage} from "./throwErrorPage";
 import {getServerCookie, getCookies, updateCookie, removeCookie} from "./cookie";
 import {bytesToMb} from "./convert";
 import getCroppedImg from "./cropImage";
-import dataURItoBlob from "./dataURItoBlob";
 
 export {
     isServerRequest,
@@ -17,6 +16,5 @@ export {
     buildInfoPaginationObject,
     throwErrorPage,
     bytesToMb,
-    getCroppedImg,
-    dataURItoBlob
+    getCroppedImg
 };

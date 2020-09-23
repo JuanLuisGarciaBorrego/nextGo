@@ -3,7 +3,7 @@ import {Field, Form} from "formik";
 import ErrorFieldForm from "./ErrorFieldForm";
 import {ROLES} from "../../constants/roles";
 import SaveOrCancelButtons from "./SaveOrCancelButtons";
-import {bytesToMb, dataURItoBlob, getCroppedImg} from "../../utils";
+import {bytesToMb, getCroppedImg} from "../../utils";
 import {useFlashMessages} from "../../context/FlashMessagesContext";
 import {FLASH_MESSAGE_ERROR, FLASH_MESSAGE_SUCCESS} from "../../constants/flashMessages";
 import API from "../../api";
