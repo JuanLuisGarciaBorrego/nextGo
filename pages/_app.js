@@ -1,4 +1,5 @@
 import '../css/tailwind.css';
+import '../css/custom.css';
 import React from 'react';
 import {DefaultSeo} from 'next-seo'
 import SEO from '../next-seo.config'
