@@ -99,7 +99,7 @@ export default function AvatarForm({userUuid, avatar = null, currentUser = false
         <Fragment>
             <Modal
                 isOpen={isOpen}
-                className='w-full  sm:max-w-lg sm:w-full'
+                className='w-full sm:max-w-lg sm:w-full'
                 handleClose={() => setOpen(false)}
             >
                 <div
