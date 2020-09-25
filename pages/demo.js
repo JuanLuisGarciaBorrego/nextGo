@@ -74,19 +74,15 @@ export default function DemoPage() {
     }
 
     const Item = SortableElement(({item}) => {
-        return <div className="first:col-span-2 first:row-span-2 flex relative cursor-move focus-visible:underline group">
-            <div className="absolute w-full h-full z-0 rounded-md inset-0 group-hover:opacity-25 bg-green-200 text-center">
-                <img className="inline-block rounded-md p-1 relative"
-                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=200&q=80"
-                     alt=""/>
-            </div>
-            <div className={`z-10 self-start justify-self-auto absolute p-1 text-red ${!item.checked && 'opacity-0' } group-hover:opacity-100 transition duration-500 ease-in-out`}>
-                <input className="leading-tight cursor-pointer absolute p-2" type="checkbox" defaultChecked={item.checked} onChange={(e) => handleChecked(e, item)} />
-            </div>
-            <div className="z-10 flex self-center mx-auto opacity-0 group-hover:opacity-100 transition duration-500 ease-in-out">
-                <svg className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        return <div className="first:col-span-2 first:row-span-2 flex relative cursor-move focus-visible:underline group rounded-md">
+            <div className="flex justify-center items-center w-full h-full z-0 rounded-md inset-0 group text-center">
+                <img className="rounded-md p-1 absolute z-0 group-hover:opacity-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
+                <svg className="relative z-10 h-6 w-6 text-gray-600 opacity-0 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                 </svg>
+            </div>
+            <div className={`z-20 self-start justify-self-auto absolute p-1 text-red ${!item.checked && 'opacity-0' } group-hover:opacity-100 transition duration-500 ease-in-out`}>
+                <input className="leading-tight cursor-pointer absolute p-2" type="checkbox" defaultChecked={item.checked} onChange={(e) => handleChecked(e, item)} />
             </div>
         </div>}
     );
