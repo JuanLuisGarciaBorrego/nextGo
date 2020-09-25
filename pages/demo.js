@@ -51,7 +51,11 @@ export default function DemoPage() {
         let totalItemsChecked = totalChecked;
         const update = items.map((el) => {
                 if(el.uuid === item.uuid) {
-                    totalItemsChecked ++;
+                    if(e.target.checked){
+                        totalItemsChecked ++;
+                    }else{
+                        totalItemsChecked --;
+                    }
                     return {
                         ...item,
                         checked: e.target.checked
@@ -65,32 +69,24 @@ export default function DemoPage() {
         setTotalChecked(totalItemsChecked);
     };
 
-    const handleAllChecked = () => {
-        let totalItemsChecked = totalChecked;
-        const update = items.map((el) => {
-            totalItemsChecked ++;
-            return {
-                ...el,
-                checked: true
-            }
-        });
-
-        setItems(update);
-        setTotalChecked(totalItemsChecked);
+    const handleRemove = () => {
+        console.log('remove items checked');
     }
 
     const Item = SortableElement(({item}) => {
         return <div className="first:col-span-2 first:row-span-2 flex relative cursor-move focus-visible:underline group">
-            <div className="absolute w-full h-full z-0 rounded-md inset-0">
+            <div className="absolute w-full h-full z-0 rounded-md inset-0 group-hover:opacity-25">
                 <img className="inline-block rounded-md"
                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                      alt=""/>
             </div>
-            <div className={`z-10 self-start justify-self-auto absolute p-1 text-red ${!item.checked && 'opacity-0' } group-hover:opacity-100`}>
+            <div className={`z-10 self-start justify-self-auto absolute p-1 text-red ${!item.checked && 'opacity-0' } group-hover:opacity-100 transition duration-500 ease-in-out`}>
                 <input className="leading-tight cursor-pointer absolute p-2" type="checkbox" defaultChecked={item.checked} onChange={(e) => handleChecked(e, item)} />
             </div>
-            <div className="z-10 flex self-center mx-auto">
-                {item.data.title}
+            <div className="z-10 flex self-center mx-auto opacity-0 group-hover:opacity-100 transition duration-500 ease-in-out">
+                <svg className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
             </div>
         </div>}
     );
@@ -102,17 +98,9 @@ export default function DemoPage() {
                 <div className="flex justify-between items-center pb-4">
                     {totalChecked === 0 ? <h3 className="text-lg leading-none font-medium text-gray-900">
                         Imágenes
-                    </h3>:
-                    <div className="relative flex items-start">
-                        <div className="flex items-center h-5 ">
-                            <input id="allChecked" className="leading-tight cursor-pointer" defaultChecked={totalChecked === items.length} type="checkbox" onChange={handleAllChecked} />
-                        </div>
-                        <div className="ml-3 text-sm leading-5">
-                            <label htmlFor="allChecked" className="font-medium text-gray-700 cursor-pointer">{totalChecked} elementos seleccionados</label>
-                        </div>
-                    </div>
+                    </h3>: <p className="font-medium text-gray-700 cursor-pointer">{totalChecked} elementos seleccionados</p>
                     }
-                    <p className="mt-1 max-w-2xl text-xs leading-5 text-red-500 flex items-center ">
+                    <p className="mt-1 max-w-2xl text-xs leading-5 text-red-500 hover:text-red-700 flex items-center cursor-pointer" onClick={handleRemove}>
                         <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
