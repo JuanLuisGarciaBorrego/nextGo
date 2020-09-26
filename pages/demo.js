@@ -1,10 +1,11 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, Fragment, useCallback} from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import {Transition} from "@tailwindui/react";
 import {Field} from "formik";
 import Modal from "../src/components/Modal";
 import ModalBasicChildren from "../src/components/ModalBasicChildren";
+import {useDropzone} from 'react-dropzone';
 
 export default function DemoPage() {
     const [items, setItems] = useState([
@@ -115,7 +116,17 @@ export default function DemoPage() {
         </div>}
     );
 
-    const List = SortableContainer(({items}) => {
+    const List = SortableContainer(({elements}) => {
+        const onDrop = useCallback(acceptedFiles => {
+            console.log(acceptedFiles)
+            // Do something with the files
+        }, []);
+
+        const onDropRejected = useCallback((rejectedFiles) => {
+            console.log('0',rejectedFiles)
+        }, []);
+        const {getRootProps, getInputProps, isDragActive} = useDropzone({maxFiles: 2, onDrop, onDropRejected})
+
 
         return (
             <div className="relative bg-white overflow-hidden p-4 z-0">
@@ -139,21 +150,31 @@ export default function DemoPage() {
                 <div className="relative">
                     <div className="absolute w-full">
                         <div className="grid gap-2 grid-cols-4 sm:grid-cols-5 box-grid bg-white ">
-                            {items.map((item, key) => <div key={key} className="bg-gray-200 first:col-span-2 first:row-span-2 flex rounded-md"> </div>)}
+                            {elements.map((item, key) => <div key={key} className="bg-gray-200 first:col-span-2 first:row-span-2 flex rounded-md"> </div>)}
                         </div>
                     </div>
 
                     <div className="grid gap-2 grid-cols-4 sm:grid-cols-5 box-grid bg-white">
-                        {items.map((item, key) => {
+                        {elements.map((item, key) => {
                             return <Item key={item.uuid} index={key} item={item}/>
                         })}
-                        <div className="z-0 group text-center flex relative border-dashed border-2 rounded-md hover:border-gray-400 transition duration-150 ease-in-out ">
-                            <span className="text-gray-500 group-hover:text-gray-600 mx-auto self-center font-medium leading-none p-2 text-sm text-center focus:outline-none focus:underline cursor-pointer">
-                                 <svg className="mx-auto text-center h-8 w-8 sm:h-12 sm:w-12 text-gray-300 group-hover:text-gray-400 " stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                                <span className="hidden sm:block font-normal block text-xs">Seleccione o suelte las imágenes aquí </span>
-                            </span>
+                        <div {...getRootProps()} className="z-0 group text-center flex relative border-dashed border-2 rounded-md hover:border-gray-400 transition duration-150 ease-in-out focus:outline-none">
+                            <input {...getInputProps()} />
+                            {
+                                isDragActive ?
+                                    <span className="text-gray-500 group-hover:text-gray-600 mx-auto self-center font-medium leading-none p-2 text-sm text-center focus:outline-none focus:underline cursor-pointer">
+                                         <svg className="mx-auto animate-bounce text-center h-8 w-8 sm:h-12 sm:w-12 text-gray-300 group-hover:text-gray-400 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <span className="hidden sm:block font-normal block text-xs">Suelta las imágenes aquí</span>
+                                    </span> :
+                                    <span className="text-gray-500 group-hover:text-gray-600 mx-auto self-center font-medium leading-none p-2 text-sm text-center focus:outline-none focus:underline cursor-pointer">
+                                         <svg className="mx-auto text-center h-8 w-8 sm:h-12 sm:w-12 text-gray-300 group-hover:text-gray-400 " stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                        <span className="hidden sm:block font-normal block text-xs">Selecciona o suelta las imágenes aquí </span>
+                                    </span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -265,8 +286,9 @@ export default function DemoPage() {
             </Modal>
 
             <div className="max-w-2xl bg-gray-200 p-4 z-0">
-                <List items={items} onSortEnd={onSortEnd} axis="xy" lockAxis="xy" hideSortableGhost={true} helperClass="opacity-50" distance={1}/>
+                <List elements={items} onSortEnd={onSortEnd} axis="xy" lockAxis="xy" hideSortableGhost={true} helperClass="opacity-50" distance={1} onRemove={() => console.log('remove')}/>
             </div>
+
         </Fragment>
     )
 }
