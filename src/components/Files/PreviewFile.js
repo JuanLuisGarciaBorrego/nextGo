@@ -1,8 +1,38 @@
 import React, {useState, Fragment} from 'react';
 import {Transition} from "@tailwindui/react";
-import {Field} from "formik";
+import {Field, Formik, Form} from "formik";
+import SERVER_API from "../../api/server";
+import {FORMS_ERROR_LOGIN} from "../../constants/forms";
+import {ROUTE_LOGIN_REDIRECT_SUCCESS} from "../../constants/routes";
 
 export default function PreviewFile({view, toggleView, seo, viewData}) {
+
+    const initialValues = {
+        title: viewData?.title,
+        description: viewData?.description
+    };
+
+    const handleSubmit = async (values, {setSubmitting, setErrors}) => {
+        return new Promise(async () => {
+            setSubmitting(true);
+
+            try {
+               //Fetch api
+                console.log(values)
+
+            } catch (e) {
+                setErrors({
+                    'errorForm': FORMS_ERROR_LOGIN
+                })
+
+                await setSubmitting(false);
+                return;
+            }
+
+            await setSubmitting(false);
+        });
+    }
+
     return (
         <Fragment>
             <Transition show={view}>
@@ -64,40 +94,40 @@ export default function PreviewFile({view, toggleView, seo, viewData}) {
                                                 </p>
                                             </div>
                                             }
-                                            <form method="POST">
-                                                <div>
-                                                    <input name="title"
-                                                           placeholder="Título (Máximo 70 caracteres)" autoComplete="Off" maxLength="70"
-                                                           defaultValue={viewData?.title}
-                                                           className="italict py-1 text-xs text-gray-600 border-solid border-b border-gray-400 form-input rounded-sm block w-full transition duration-150 ease-in-out outline-none" />
-                                                </div>
-                                                <div className="mt-4">
-                                                    <input name="description"
-                                                           placeholder="Descripción (Máximo 120 caracteres)" autoComplete="Off" maxLength="120"
-                                                           defaultValue={viewData?.description}
-                                                           className="italic py-1 text-xs text-gray-600 border-solid border-b border-gray-400 form-input rounded-sm block w-full transition duration-150 ease-in-out outline-none" />
-                                                </div>
 
-                                                <div className="mt-4">
-                                                    <button className="text-sm text-gray-600 focus:outline-none flex items-center border border-gray-400 py-1 px-2 text-sm leading-5 font-medium rounded-md hover:bg-gray-100 transition duration-150 ease-in-out outline-none" type="submit">
-                                                        Guardar
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            <Formik
+                                                initialValues={initialValues}
+                                                onSubmit={handleSubmit}
+                                            >
+                                                {({
+                                                      isSubmitting
+                                                  }) => {
+                                                      return (
+                                                           <Form>
+                                                                <div>
+                                                                    <Field name="title"
+                                                                           placeholder="Título (Máximo 70 caracteres)" autoComplete="Off" maxLength="70"
+                                                                           className="italict py-1 text-xs text-gray-600 border-solid border-b border-gray-400 form-input rounded-sm block w-full transition duration-150 ease-in-out outline-none" />
+                                                                </div>
+                                                                <div className="mt-4">
+                                                                    <Field name="description"
+                                                                           placeholder="Descripción (Máximo 120 caracteres)" autoComplete="Off" maxLength="120"
+                                                                           className="italic py-1 text-xs text-gray-600 border-solid border-b border-gray-400 form-input rounded-sm block w-full transition duration-150 ease-in-out outline-none" />
+                                                                </div>
+
+                                                                <div className="mt-4">
+                                                                    <button
+                                                                        disabled={isSubmitting && true}
+                                                                        className={`${isSubmitting && 'opacity-50 cursor-not-allowed spinner'} text-sm text-gray-600 focus:outline-none flex items-center border border-gray-400 py-1 px-2 text-sm leading-5 font-medium rounded-md hover:bg-gray-100 transition duration-150 ease-in-out outline-none`} type="submit">
+                                                                        Guardar
+                                                                    </button>
+                                                                </div>
+                                                           </Form>
+                                                      )
+                                                }}
+                                            </Formik>
                                         </div>
                                         }
-                                    </div>
-                                    <div className="flex p-2 space-x-2 flex bottom-0 justify-end">
-                                        <span className="rounded-md shadow-sm">
-                                          <button type="button" className="py-2 px-2 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                                Cancelar
-                                          </button>
-                                        </span>
-                                        <span className="rounded-md shadow-sm">
-                                          <button type="submit" className="inline-flex justify-center py-2 px-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                            Guardar
-                                          </button>
-                                        </span>
                                     </div>
                                 </div>
                             </div>
