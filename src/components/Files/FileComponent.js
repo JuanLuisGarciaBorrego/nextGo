@@ -26,7 +26,9 @@ export default function FileComponent({elements = [], title, titleSelected, remo
     const [totalChecked, setTotalChecked] = useState(0);
 
     const onSortEnd = ({oldIndex, newIndex}) => {
-        handleOnSortEnd(arrayMove(items, oldIndex, newIndex));
+        const order = arrayMove(items, oldIndex, newIndex);
+        setItems(order)
+        handleOnSortEnd(order);
     };
 
     const handleChecked = (e, item) => {
