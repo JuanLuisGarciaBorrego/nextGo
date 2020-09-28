@@ -8,8 +8,8 @@ import {ROUTE_LOGIN_REDIRECT_SUCCESS} from "../../constants/routes";
 export default function PreviewFile({view, toggleView, seo, viewData}) {
 
     const initialValues = {
-        title: viewData?.title,
-        description: viewData?.description
+        title: viewData?.title || '',
+        description: viewData?.description || ''
     };
 
     const handleSubmit = async (values, {setSubmitting, setErrors}) => {
