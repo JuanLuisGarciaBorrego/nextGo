@@ -33,11 +33,6 @@ export default function DemoPage() {
 
     const [items, setItems] = useState(listItems);
 
-    const onSortEnd = ({oldIndex, newIndex}) => {
-        setItems(arrayMove(items, oldIndex, newIndex));
-    };
-
-
     return (
         <div>
             <FileComponent
